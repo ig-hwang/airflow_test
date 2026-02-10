@@ -46,9 +46,21 @@ def validate_db():
     log.info("DB validation passed")
 
 
-def fetch_and_upsert_prices(symbol: str, bootstrap: bool = False):
-    """Download OHLCV for *symbol* and bulk-upsert into stock_prices."""
-    period = "2y" if bootstrap else "60d"
+def fetch_and_upsert_prices(symbol: str, bootstrap: bool = False, **context):
+    """Download OHLCV for *symbol* and bulk-upsert into stock_prices.
+
+    Supports dag_run.conf override:
+      - {"period": "3y"}   → fetch 3 years (full historical bootstrap)
+      - {"bootstrap": true} → fetch 2 years
+    Trigger via Airflow UI: Trigger DAG w/ config → {"period": "3y"}
+    """
+    dag_run = context.get("dag_run")
+    conf = (dag_run.conf or {}) if dag_run else {}
+    period_override = conf.get("period")
+    if period_override:
+        period = period_override
+    else:
+        period = "2y" if (bootstrap or conf.get("bootstrap", False)) else "60d"
     log.info("Fetching %s prices (period=%s)", symbol, period)
 
     df = yf.Ticker(symbol, session=_YF_SESSION).history(period=period)
@@ -246,6 +258,7 @@ with DAG(
                 task_id=f"fetch_{sym.replace('.', '_')}",
                 python_callable=fetch_and_upsert_prices,
                 op_kwargs={"symbol": sym},
+                provide_context=True,
             )
             for sym in ALL_SYMBOLS
         ]
