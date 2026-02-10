@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+.env
+
+# Airflow
+airflow_setup/logs/
+airflow_setup/data/
+airflow_setup/.env
+
+# Docker
+airflow_setup/plugins/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
