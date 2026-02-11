@@ -16,7 +16,7 @@ from sqlalchemy import text
 # Reusable yfinance session that bypasses SSL cert issues in Docker
 try:
     from curl_cffi import requests as _cffi_requests
-    _YF_SESSION = _cffi_requests.Session(verify=False)
+    _YF_SESSION = _cffi_requests.Session(impersonate="chrome110", verify=False)
 except ImportError:
     import requests as _requests
     _YF_SESSION = _requests.Session()
