@@ -73,6 +73,8 @@ CREATE TABLE stock_news (
     source      VARCHAR(200),
     published   TIMESTAMP,
     summary     TEXT,
+    ai_summary  TEXT,
+    sentiment   VARCHAR(10),
     created_at  TIMESTAMP      DEFAULT NOW(),
     UNIQUE (symbol, url)
 );
@@ -90,3 +92,15 @@ CREATE TABLE chart_generation_log (
     created_at  TIMESTAMP      DEFAULT NOW(),
     UNIQUE (symbol, chart_date)
 );
+
+CREATE TABLE weekly_digest (
+    id          SERIAL PRIMARY KEY,
+    week_start  DATE           NOT NULL UNIQUE,
+    week_end    DATE           NOT NULL,
+    headline    VARCHAR(300),
+    content     TEXT           NOT NULL,
+    created_at  TIMESTAMP      DEFAULT NOW(),
+    updated_at  TIMESTAMP      DEFAULT NOW()
+);
+
+CREATE INDEX idx_digest_week_start ON weekly_digest (week_start DESC);

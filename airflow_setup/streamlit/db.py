@@ -207,6 +207,22 @@ def load_multi_prices(symbols: tuple, days: int) -> pd.DataFrame:
         )
 
 
+@st.cache_data(ttl=600)
+def load_weekly_digests(limit: int = 12) -> pd.DataFrame:
+    """Load recent weekly digests ordered newest first."""
+    with get_engine().connect() as conn:
+        return pd.read_sql(
+            text("""
+                SELECT week_start, week_end, headline, content, created_at
+                FROM weekly_digest
+                ORDER BY week_start DESC
+                LIMIT :limit
+            """),
+            conn,
+            params={"limit": limit},
+        )
+
+
 # ── Signal detection ─────────────────────────────────────────────────────────
 
 _SIGNAL_WEIGHTS = {
