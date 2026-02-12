@@ -167,7 +167,8 @@ def load_news(symbol: str = None, limit: int = 60) -> pd.DataFrame:
         if symbol:
             return pd.read_sql(
                 text("""
-                    SELECT title, source, published, url, summary, symbol
+                    SELECT title, source, published, url, summary, symbol,
+                           ai_summary, sentiment
                     FROM stock_news
                     WHERE symbol = :symbol
                     ORDER BY published DESC NULLS LAST
@@ -178,7 +179,8 @@ def load_news(symbol: str = None, limit: int = 60) -> pd.DataFrame:
             )
         return pd.read_sql(
             text("""
-                SELECT title, source, published, url, summary, symbol
+                SELECT title, source, published, url, summary, symbol,
+                       ai_summary, sentiment
                 FROM stock_news
                 ORDER BY published DESC NULLS LAST
                 LIMIT :limit

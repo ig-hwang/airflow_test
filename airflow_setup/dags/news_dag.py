@@ -2,9 +2,12 @@
 News Collection DAG
 Schedule: 0 6 * * * (daily at 06:00 UTC)
 Collects news via yfinance (listed symbols) and Google News RSS (all + private companies).
+After collection, runs Claude AI analysis for each article (summary + expert analysis + sentiment).
 """
 
+import json
 import logging
+import os
 import time
 from datetime import datetime, timedelta
 from urllib.parse import quote_plus
@@ -29,6 +32,18 @@ from airflow.utils.task_group import TaskGroup
 from common import ALL_SYMBOLS, DEFAULT_ARGS, get_engine
 
 log = logging.getLogger(__name__)
+
+# Company names for AI prompt context
+SYMBOL_NAMES = {
+    "AVGO": "Broadcom", "BE": "Bloom Energy", "VRT": "Vertiv",
+    "SMR": "NuScale Power", "OKLO": "Oklo", "GEV": "GE Vernova",
+    "MRVL": "Marvell Technology", "COHR": "Coherent Corp", "LITE": "Lumentum",
+    "VST": "Vistra Energy", "ETN": "Eaton Corporation",
+    "267260.KS": "HD현대일렉트릭", "034020.KS": "두산에너빌리티",
+    "028260.KS": "삼성물산", "267270.KS": "HD현대중공업", "010120.KS": "LS ELECTRIC",
+    "SBGSY": "Schneider Electric", "HTHIY": "Hitachi",
+    "TerraPower": "TerraPower", "X-Energy": "X-Energy",
+}
 
 # Google News search queries → (symbol_key, query_string)
 GOOGLE_NEWS_QUERIES = [
@@ -136,6 +151,99 @@ def fetch_google_news(symbol_key: str, query: str):
     time.sleep(1)
 
 
+def analyze_news_batch():
+    """
+    Call Claude API to generate expert analysis for news articles without ai_summary.
+    Processes up to 60 articles per run (newest first) to stay within rate limits.
+    Stores: summary (plain language) + expert analysis + sentiment (호재/악재/중립).
+    """
+    api_key = os.environ.get("ANTHROPIC_API_KEY", "")
+    if not api_key:
+        log.warning("ANTHROPIC_API_KEY not set — skipping AI analysis")
+        return
+
+    try:
+        import anthropic
+    except ImportError:
+        log.warning("anthropic package not installed — skipping AI analysis")
+        return
+
+    client = anthropic.Anthropic(api_key=api_key)
+
+    with get_engine().connect() as conn:
+        rows = conn.execute(text("""
+            SELECT id, symbol, title, summary
+            FROM stock_news
+            WHERE ai_summary IS NULL
+            ORDER BY published DESC NULLS LAST
+            LIMIT 60
+        """)).fetchall()
+
+    if not rows:
+        log.info("No articles need AI analysis")
+        return
+
+    log.info("Running AI analysis for %d articles", len(rows))
+
+    updates = []
+    for row in rows:
+        article_id, symbol, title, raw_summary = row[0], row[1], row[2], row[3] or ""
+
+        company = SYMBOL_NAMES.get(symbol, symbol)
+        context = f"원문 요약: {raw_summary[:400]}" if raw_summary else ""
+
+        prompt = f"""너는 주식·경제·IT·기업가치 분야의 전문 애널리스트야.
+아래 뉴스 기사를 분석하고 반드시 JSON 형식으로만 응답해. 다른 텍스트는 절대 포함하지 마.
+
+종목: {symbol} ({company})
+제목: {title}
+{context}
+
+응답 형식 (JSON만):
+{{
+  "summary": "이 기사가 무엇에 관한 것인지 투자자가 이해하기 쉽게 2~3문장으로 설명 (한국어)",
+  "analysis": "경제·주가·IT·기업가치 전문가 관점에서 이 뉴스가 갖는 의미와 시사점 2~3문장 (한국어)",
+  "sentiment": "호재 또는 악재 또는 중립",
+  "reason": "호재/악재/중립으로 판단한 핵심 근거 한 문장 (한국어)"
+}}"""
+
+        try:
+            resp = client.messages.create(
+                model="claude-haiku-4-5-20251001",
+                max_tokens=500,
+                messages=[{"role": "user", "content": prompt}],
+            )
+            result = json.loads(resp.content[0].text.strip())
+
+            sentiment = result.get("sentiment", "중립")
+            if sentiment not in ("호재", "악재", "중립"):
+                sentiment = "중립"
+
+            ai_text = (
+                f"📌 내용 요약\n{result.get('summary', '')}\n\n"
+                f"💡 전문가 분석\n{result.get('analysis', '')}\n\n"
+                f"📊 판단 근거\n{result.get('reason', '')}"
+            )
+
+            updates.append({
+                "id": article_id,
+                "ai_summary": ai_text,
+                "sentiment": sentiment,
+            })
+        except Exception as exc:
+            log.warning("AI analysis failed for id=%d (%s): %s", article_id, title[:40], exc)
+
+        time.sleep(0.3)  # Anthropic API rate-limit guard
+
+    if updates:
+        with get_engine().begin() as conn:
+            conn.execute(
+                text("UPDATE stock_news SET ai_summary=:ai_summary, sentiment=:sentiment WHERE id=:id"),
+                updates,
+            )
+        log.info("AI analysis saved for %d articles", len(updates))
+
+
 def _news_complete():
     log.info("news_collection DAG finished successfully")
 
@@ -173,6 +281,11 @@ with DAG(
             for sym_key, query in GOOGLE_NEWS_QUERIES
         ]
 
+    analyze = PythonOperator(
+        task_id="analyze_news",
+        python_callable=analyze_news_batch,
+    )
+
     complete = PythonOperator(task_id="news_complete", python_callable=_news_complete)
 
-    [yf_group, gn_group] >> complete
+    [yf_group, gn_group] >> analyze >> complete
