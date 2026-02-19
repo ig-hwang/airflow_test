@@ -6,26 +6,32 @@ Covers: macro economy, stock indices, earnings, sector highlights, global risks.
 import pandas as pd
 import streamlit as st
 
+import _nav
 from db import load_weekly_digests
 
-st.title("📋 주간 시장 이슈 모음")
+st.set_page_config(page_title="AlphaBoard — 주간 리포트", page_icon="📋", layout="wide")
+_nav.inject()
+
+st.header("주간 시장 리포트", divider="blue")
 st.caption("매주 월요일 자동 생성 · Claude AI 기반 종합 분석")
 
 # ── Sidebar ────────────────────────────────────────────────────────────────────
 with st.sidebar:
-    st.header("주간 이슈 설정")
-    show_weeks = st.slider("불러올 주 수", 1, 12, 4)
-
-    if st.button("🔄 새로고침", use_container_width=True):
+    _nav.section("표시 설정")
+    show_weeks = st.slider("불러올 주 수", 1, 12, 4, label_visibility="collapsed")
+    st.divider()
+    if st.button("↺  새로고침", use_container_width=True):
         st.cache_data.clear()
         st.rerun()
-
     st.divider()
-    st.caption(
-        "📌 **생성 시점**: 매주 월요일 08:00 UTC\n\n"
-        "📌 **커버리지**: 직전 7일 (월~일)\n\n"
-        "📌 **데이터 출처**: 추적 종목 DB + Google News RSS + Claude Sonnet 분석"
-    )
+    st.markdown("""
+    <div style="font-size:0.72rem;color:#2d3a52;line-height:1.9;padding:2px 2px;">
+      생성 시점 &nbsp;·&nbsp; 매주 월요일 08:00 UTC<br>
+      커버리지 &nbsp;&nbsp;·&nbsp; 직전 7일 (월~일)<br>
+      출처 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;·&nbsp; DB + RSS + Claude AI
+    </div>
+    """, unsafe_allow_html=True)
+    _nav.status_bar("Claude Sonnet · AI 분석")
 
 # ── Load data ──────────────────────────────────────────────────────────────────
 digests = load_weekly_digests(limit=show_weeks)

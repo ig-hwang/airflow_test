@@ -14,6 +14,7 @@ from sqlalchemy import create_engine, text
 # ── Symbol metadata ─────────────────────────────────────────────────────────
 
 SYMBOL_NAMES = {
+    # 기존 테마주 (에너지/반도체/인프라)
     "AVGO": "Broadcom",
     "BE": "Bloom Energy",
     "VRT": "Vertiv Holdings",
@@ -25,27 +26,90 @@ SYMBOL_NAMES = {
     "LITE": "Lumentum",
     "VST": "Vistra Energy",
     "ETN": "Eaton",
+    # 빅테크
+    "AAPL": "Apple",
+    "MSFT": "Microsoft",
+    "AMZN": "Amazon",
+    "NVDA": "NVIDIA",
+    "META": "Meta",
+    "GOOGL": "Alphabet",
+    # 금융/헬스케어/소비재
+    "BRK-B": "Berkshire Hathaway",
+    "JPM": "JPMorgan Chase",
+    "UNH": "UnitedHealth",
+    "JNJ": "J&J",
+    "LLY": "Eli Lilly",
+    "PFE": "Pfizer",
+    "MRK": "Merck",
+    "ABBV": "AbbVie",
+    "AMGN": "Amgen",
+    "ISRG": "Intuitive Surgical",
+    "PEP": "PepsiCo",
+    "KO": "Coca-Cola",
+    "VZ": "Verizon",
+    "CSCO": "Cisco",
+    # 반도체/소재
+    "AMD": "AMD",
+    "MU": "Micron Technology",
+    "AMAT": "Applied Materials",
+    "MP": "MP Materials",
+    # 글로벌 US 상장
+    "TSM": "TSMC",
+    "ASML": "ASML",
+    "ABBNY": "ABB Ltd",
+    # 한국
     "267260.KS": "HD현대일렉트릭",
     "034020.KS": "두산에너빌리티",
     "028260.KS": "삼성물산",
     "267270.KS": "HD현대중공업",
     "010120.KS": "LS ELECTRIC",
+    # ADR
     "SBGSY": "Schneider Electric",
     "HTHIY": "Hitachi",
+    "FANUY": "Fanuc",
+    "KYOCY": "Keyence",
+    "SMCAY": "SMC Corp",
+    # 비상장 민간기업 (뉴스 전용)
+    "TerraPower": "TerraPower",
+    "X-Energy": "X-Energy",
 }
 
 SYMBOL_CATEGORY = {
+    # US
     "AVGO": "US", "BE": "US", "VRT": "US", "SMR": "US", "OKLO": "US",
     "GEV": "US", "MRVL": "US", "COHR": "US", "LITE": "US", "VST": "US", "ETN": "US",
+    "AAPL": "US", "MSFT": "US", "AMZN": "US", "NVDA": "US", "META": "US", "GOOGL": "US",
+    "BRK-B": "US", "JPM": "US", "UNH": "US", "JNJ": "US", "LLY": "US",
+    "PFE": "US", "MRK": "US", "ABBV": "US", "AMGN": "US", "ISRG": "US",
+    "PEP": "US", "KO": "US", "VZ": "US", "CSCO": "US",
+    "AMD": "US", "MU": "US", "AMAT": "US", "MP": "US",
+    # KR
     "267260.KS": "KR", "034020.KS": "KR", "028260.KS": "KR",
     "267270.KS": "KR", "010120.KS": "KR",
+    # ADR (외국기업 US 거래소 상장)
     "SBGSY": "ADR", "HTHIY": "ADR",
+    "FANUY": "ADR", "KYOCY": "ADR", "SMCAY": "ADR",
+    "TSM": "ADR", "ASML": "ADR", "ABBNY": "ADR",
 }
 
-US_SYMBOLS  = [s for s, c in SYMBOL_CATEGORY.items() if c == "US"]
-KR_SYMBOLS  = [s for s, c in SYMBOL_CATEGORY.items() if c == "KR"]
-ADR_SYMBOLS = [s for s, c in SYMBOL_CATEGORY.items() if c == "ADR"]
-ALL_SYMBOLS = US_SYMBOLS + KR_SYMBOLS + ADR_SYMBOLS
+US_SYMBOLS = [
+    "AVGO", "BE", "VRT", "SMR", "OKLO",
+    "GEV", "MRVL", "COHR", "LITE", "VST", "ETN",
+    "AAPL", "MSFT", "AMZN", "NVDA", "META", "GOOGL",
+    "BRK-B", "JPM", "UNH", "JNJ", "LLY", "PFE", "MRK", "ABBV",
+    "AMGN", "ISRG", "PEP", "KO", "VZ", "CSCO",
+    "AMD", "MU", "AMAT", "MP",
+    "TSM", "ASML", "ABBNY",
+]
+KR_SYMBOLS = [
+    "267260.KS", "034020.KS", "028260.KS", "267270.KS", "010120.KS",
+]
+ADR_SYMBOLS = [
+    "SBGSY", "HTHIY", "FANUY", "KYOCY", "SMCAY",
+]
+ALL_SYMBOLS    = US_SYMBOLS + KR_SYMBOLS + ADR_SYMBOLS  # 48개 (시세 수집 대상)
+PRIVATE_SYMBOLS = ["TerraPower", "X-Energy"]            # 비상장 (뉴스 전용)
+NEWS_SYMBOLS   = ALL_SYMBOLS + PRIVATE_SYMBOLS          # 뉴스피드 필터용 전체 목록
 
 TIMEFRAME_DAYS = {
     "1W": 7, "1M": 30, "3M": 90, "6M": 180,

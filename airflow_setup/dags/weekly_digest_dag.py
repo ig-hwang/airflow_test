@@ -23,7 +23,7 @@ from sqlalchemy import text
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 
-from common import DEFAULT_ARGS, get_engine
+from common import DEFAULT_ARGS, get_engine, make_neon_sync_task
 
 log = logging.getLogger(__name__)
 
@@ -70,28 +70,8 @@ def _rss_headlines(query: str, n: int = 8) -> list[str]:
 
 # ── Task functions ───────────────────────────────────────────────────────────
 
-def generate_weekly_digest():
-    """
-    1) Pull tracked-symbol weekly returns + news from DB
-    2) Fetch general market headlines via Google News RSS
-    3) Call Claude Sonnet to write a comprehensive Korean digest
-    4) Upsert result into weekly_digest table
-    """
-    api_key = os.environ.get("ANTHROPIC_API_KEY", "")
-    if not api_key:
-        log.warning("ANTHROPIC_API_KEY not set — skipping weekly digest generation")
-        return
-
-    try:
-        import anthropic
-    except ImportError:
-        log.warning("anthropic package not installed")
-        return
-
-    week_start, week_end = _week_range()
-    log.info("Generating weekly digest for %s ~ %s", week_start, week_end)
-
-    # ── 1. Tracked symbols: weekly price returns ─────────────────────────────
+def _collect_digest_data(week_start, week_end) -> dict:
+    """Collect all data needed for digest (DB prices, DB news, RSS headlines)."""
     with get_engine().connect() as conn:
         price_df = pd.read_sql(
             text("""
@@ -121,37 +101,145 @@ def generate_weekly_digest():
         if len(grp) >= 2:
             returns[sym] = (grp["close"].iloc[-1] / grp["close"].iloc[0] - 1) * 100
 
-    price_block = "데이터 없음"
-    if returns:
-        sorted_rets = sorted(returns.items(), key=lambda x: x[1], reverse=True)
-        price_block = "\n".join(
-            f"  {sym:12s} ({SYMBOL_NAMES.get(sym, sym):20s})  {ret:+.1f}%"
-            for sym, ret in sorted_rets
-        )
-
-    # News headlines from DB
-    news_block = "없음"
-    if not news_df.empty:
-        lines = []
-        for _, row in news_df.head(40).iterrows():
-            sym  = row["symbol"]
-            name = SYMBOL_NAMES.get(sym, sym)
-            lines.append(f"  [{sym}/{name}] {row['title']}")
-        news_block = "\n".join(lines)
-
-    # ── 2. General market RSS ────────────────────────────────────────────────
-    rss_block = ""
+    # RSS headlines per topic
+    rss_data = {}
     for topic, query in MARKET_FEEDS:
         headlines = _rss_headlines(query, n=7)
         if headlines:
+            rss_data[topic] = headlines
+
+    return {"returns": returns, "news_df": news_df, "rss_data": rss_data}
+
+
+def _build_basic_digest(week_start, week_end, data: dict) -> str:
+    """Build a template-based digest (no AI) from collected data."""
+    returns  = data["returns"]
+    news_df  = data["news_df"]
+    rss_data = data["rss_data"]
+
+    lines = []
+
+    # ── 섹션 1: 추적 종목 주간 수익률 ───────────────────────────────────────
+    lines.append("## 📊 이번 주 추적 종목 수익률\n")
+    if returns:
+        sorted_rets = sorted(returns.items(), key=lambda x: x[1], reverse=True)
+        gainers = [(s, r) for s, r in sorted_rets if r > 0]
+        losers  = [(s, r) for s, r in sorted_rets if r <= 0]
+
+        lines.append("**상승 종목**")
+        if gainers:
+            for sym, ret in gainers:
+                name = SYMBOL_NAMES.get(sym, sym)
+                lines.append(f"- {sym} ({name}): **{ret:+.1f}%**")
+        else:
+            lines.append("- 없음")
+
+        lines.append("\n**하락 종목**")
+        if losers:
+            for sym, ret in losers:
+                name = SYMBOL_NAMES.get(sym, sym)
+                lines.append(f"- {sym} ({name}): **{ret:+.1f}%**")
+        else:
+            lines.append("- 없음")
+    else:
+        lines.append("_이번 주 가격 데이터 없음 (stock_price_collection DAG 실행 필요)_")
+
+    lines.append("")
+
+    # ── 섹션 2~6: RSS 뉴스 헤드라인 (topic별) ───────────────────────────────
+    SECTION_ICONS = {
+        "미국 경제 & 연준":  "🏦 거시경제 & 연준 동향",
+        "주식시장 동향":      "📈 주식시장 동향",
+        "기업 실적 발표":     "📋 주요 실적 발표",
+        "AI & 반도체":        "⚡ AI & 반도체",
+        "에너지 & 원자력":    "⚡ 에너지 & 원자력",
+        "글로벌 & 지정학":    "🌏 글로벌 & 지정학",
+    }
+    for topic, _ in MARKET_FEEDS:
+        headlines = rss_data.get(topic, [])
+        section_title = SECTION_ICONS.get(topic, topic)
+        lines.append(f"## {section_title}\n")
+        if headlines:
+            for h in headlines:
+                lines.append(f"- {h}")
+        else:
+            lines.append("_헤드라인 수집 실패_")
+        lines.append("")
+
+    # ── 섹션 7: 추적 종목 뉴스 헤드라인 (DB) ───────────────────────────────
+    lines.append("## 📰 추적 종목 주간 뉴스\n")
+    if not news_df.empty:
+        for _, row in news_df.head(30).iterrows():
+            sym  = row["symbol"]
+            name = SYMBOL_NAMES.get(sym, sym)
+            lines.append(f"- **[{sym}]** {row['title']}")
+    else:
+        lines.append("_이번 주 수집된 뉴스 없음_")
+    lines.append("")
+
+    # ── 안내 메시지 ──────────────────────────────────────────────────────────
+    lines.append("---")
+    lines.append(
+        "> ℹ️ **기본 모드**: ANTHROPIC_API_KEY가 설정되지 않아 AI 분석 없이 "
+        "원본 데이터를 그대로 표시합니다. API 키를 `.env`에 추가하면 "
+        "Claude AI가 심층 분석·요약·인사이트를 포함한 전문 리포트를 생성합니다."
+    )
+
+    return "\n".join(lines)
+
+
+def generate_weekly_digest():
+    """
+    1) Pull tracked-symbol weekly returns + news from DB
+    2) Fetch general market headlines via Google News RSS
+    3) Call Claude Sonnet to write a comprehensive Korean digest
+       (fallback: template-based digest when API key not set)
+    4) Upsert result into weekly_digest table
+    """
+    week_start, week_end = _week_range()
+    log.info("Generating weekly digest for %s ~ %s", week_start, week_end)
+
+    data = _collect_digest_data(week_start, week_end)
+
+    api_key = os.environ.get("ANTHROPIC_API_KEY", "")
+    ai_available = bool(api_key)
+    if ai_available:
+        try:
+            import anthropic
+        except ImportError:
+            log.warning("anthropic package not installed — using basic digest")
+            ai_available = False
+
+    if ai_available:
+        # ── AI digest via Claude Sonnet ──────────────────────────────────────
+        returns  = data["returns"]
+        news_df  = data["news_df"]
+        rss_data = data["rss_data"]
+
+        price_block = "데이터 없음"
+        if returns:
+            sorted_rets = sorted(returns.items(), key=lambda x: x[1], reverse=True)
+            price_block = "\n".join(
+                f"  {sym:12s} ({SYMBOL_NAMES.get(sym, sym):20s})  {ret:+.1f}%"
+                for sym, ret in sorted_rets
+            )
+
+        news_block = "없음"
+        if not news_df.empty:
+            lines = []
+            for _, row in news_df.head(40).iterrows():
+                sym  = row["symbol"]
+                name = SYMBOL_NAMES.get(sym, sym)
+                lines.append(f"  [{sym}/{name}] {row['title']}")
+            news_block = "\n".join(lines)
+
+        rss_block = ""
+        for topic, headlines in rss_data.items():
             rss_block += f"\n[{topic}]\n" + "\n".join(f"  - {h}" for h in headlines) + "\n"
-    if not rss_block:
-        rss_block = "RSS 수집 실패"
+        if not rss_block:
+            rss_block = "RSS 수집 실패"
 
-    # ── 3. Claude Sonnet digest generation ──────────────────────────────────
-    client = anthropic.Anthropic(api_key=api_key)
-
-    prompt = f"""너는 미국·글로벌 주식시장과 경제를 전문적으로 분석하는 시니어 애널리스트야.
+        prompt = f"""너는 미국·글로벌 주식시장과 경제를 전문적으로 분석하는 시니어 애널리스트야.
 아래 데이터를 바탕으로 이번 주({week_start} ~ {week_end}) 주간 시장 이슈 모음을 한국어로 작성해줘.
 투자자가 한눈에 파악할 수 있도록 핵심만 명확하게, 인사이트 있게 써줘.
 
@@ -189,18 +277,25 @@ def generate_weekly_digest():
 ## 💡 이번 주 핵심 한 줄 요약
 (전체를 한 문장으로 압축)"""
 
-    response = client.messages.create(
-        model="claude-sonnet-4-5-20250929",
-        max_tokens=2500,
-        messages=[{"role": "user", "content": prompt}],
-    )
-    content  = response.content[0].text.strip()
+        response = anthropic.Anthropic(api_key=api_key).messages.create(
+            model="claude-sonnet-4-5-20250929",
+            max_tokens=2500,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        content = response.content[0].text.strip()
+        log.info("AI digest generated via Claude Sonnet")
+
+    else:
+        # ── Fallback: template-based digest ──────────────────────────────────
+        log.info("ANTHROPIC_API_KEY not set — building basic template digest")
+        content = _build_basic_digest(week_start, week_end, data)
+
     headline = (
         f"{week_start.strftime('%Y년 %m월 %d일')} ~ "
         f"{week_end.strftime('%m월 %d일')} 주간 시장 이슈"
     )
 
-    # ── 4. Upsert into DB ────────────────────────────────────────────────────
+    # ── Upsert into DB ────────────────────────────────────────────────────
     with get_engine().begin() as conn:
         conn.execute(
             text("""
@@ -250,4 +345,9 @@ with DAG(
         python_callable=_digest_complete,
     )
 
-    generate >> complete
+    sync_neon = PythonOperator(
+        task_id="sync_to_neon",
+        python_callable=make_neon_sync_task(["weekly_digest"]),
+    )
+
+    generate >> complete >> sync_neon

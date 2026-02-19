@@ -6,6 +6,7 @@ Streamlit multipage entry point.
 import pandas as pd
 import streamlit as st
 
+import _nav
 from db import (
     SYMBOL_CATEGORY, SYMBOL_NAMES,
     compute_overall_signal, detect_signals, load_overview_data,
@@ -13,26 +14,26 @@ from db import (
 )
 
 st.set_page_config(
-    page_title="Stock Dashboard",
+    page_title="AlphaBoard — Market Overview",
     page_icon="📈",
     layout="wide",
     initial_sidebar_state="expanded",
 )
 
+_nav.inject()
+
 # ── Sidebar ──────────────────────────────────────────────────────────────────
 with st.sidebar:
-    st.title("📈 Stock Dashboard")
-    st.caption("Airflow 수집 데이터 기반 주식 분석")
-    if st.button("🔄 새로고침", use_container_width=True):
+    _nav.section("컨트롤")
+    if st.button("↺  새로고침", use_container_width=True):
         st.cache_data.clear()
         st.rerun()
     st.divider()
-    st.caption("📡 Airflow UI → http://localhost:8080")
-    st.caption("📊 데이터: Yahoo Finance (yfinance)")
+    _nav.status_bar("Yahoo Finance · 실시간 수집")
 
 
 # ── Main ─────────────────────────────────────────────────────────────────────
-st.header("시장 개요")
+st.header("시장 개요", divider="blue")
 
 df = load_overview_data()
 if df.empty:

@@ -7,6 +7,7 @@ import plotly.graph_objects as go
 import streamlit as st
 from plotly.subplots import make_subplots
 
+import _nav
 from db import (
     SYMBOL_NAMES, TIMEFRAME_DAYS,
     build_chart, compute_overall_signal, detect_signals,
@@ -14,9 +15,13 @@ from db import (
     signal_badge_html, signal_icon,
 )
 
+# ── Page config + nav ─────────────────────────────────────────────────────────
+st.set_page_config(page_title="AlphaBoard — 종목 분석", page_icon="📈", layout="wide")
+_nav.inject()
+
 # ── Sidebar ───────────────────────────────────────────────────────────────────
 with st.sidebar:
-    st.header("종목 설정")
+    _nav.section("종목 선택")
     symbols = load_symbols()
     if not symbols:
         st.warning("데이터 없음. DAG를 먼저 실행하세요.")
@@ -26,20 +31,28 @@ with st.sidebar:
         "종목",
         symbols,
         format_func=lambda s: f"{s}  {SYMBOL_NAMES.get(s, '')}",
+        label_visibility="collapsed",
     )
-    timeframe = st.select_slider("기간", options=list(TIMEFRAME_DAYS.keys()), value="1Y")
+    _nav.section("기간")
+    timeframe = st.select_slider(
+        "기간", options=list(TIMEFRAME_DAYS.keys()), value="1Y",
+        label_visibility="collapsed",
+    )
     days = TIMEFRAME_DAYS[timeframe]
 
     st.divider()
+    _nav.section("추가 지표")
     indicator_choice = st.multiselect(
         "추가 지표 패널",
         ["CCI", "ATR", "OBV", "MFI"],
         default=[],
+        label_visibility="collapsed",
     )
-
-    if st.button("🔄 새로고침", use_container_width=True):
+    st.divider()
+    if st.button("↺  새로고침", use_container_width=True):
         st.cache_data.clear()
         st.rerun()
+    _nav.status_bar("Yahoo Finance · 기술적 지표")
 
 # ── Load data ─────────────────────────────────────────────────────────────────
 df = load_prices(symbol, days)

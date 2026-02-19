@@ -26,7 +26,7 @@ from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.utils.task_group import TaskGroup
 
-from common import ALL_SYMBOLS, DEFAULT_ARGS, get_engine
+from common import ALL_SYMBOLS, DEFAULT_ARGS, get_engine, make_neon_sync_task
 
 log = logging.getLogger(__name__)
 
@@ -258,7 +258,6 @@ with DAG(
                 task_id=f"fetch_{sym.replace('.', '_')}",
                 python_callable=fetch_and_upsert_prices,
                 op_kwargs={"symbol": sym},
-                provide_context=True,
             )
             for sym in ALL_SYMBOLS
         ]
@@ -285,4 +284,11 @@ with DAG(
 
     complete = PythonOperator(task_id="dag_complete", python_callable=_dag_complete)
 
-    validate >> fetch_group >> indicators_group >> fundamentals_group >> complete
+    sync_neon = PythonOperator(
+        task_id="sync_to_neon",
+        python_callable=make_neon_sync_task(
+            ["stock_prices", "stock_fundamentals"],
+        ),
+    )
+
+    validate >> fetch_group >> indicators_group >> fundamentals_group >> complete >> sync_neon

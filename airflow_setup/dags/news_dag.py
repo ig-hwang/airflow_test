@@ -29,7 +29,7 @@ from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.utils.task_group import TaskGroup
 
-from common import ALL_SYMBOLS, DEFAULT_ARGS, get_engine
+from common import ALL_SYMBOLS, DEFAULT_ARGS, get_engine, make_neon_sync_task
 
 log = logging.getLogger(__name__)
 
@@ -288,4 +288,12 @@ with DAG(
 
     complete = PythonOperator(task_id="news_complete", python_callable=_news_complete)
 
-    [yf_group, gn_group] >> analyze >> complete
+    sync_neon = PythonOperator(
+        task_id="sync_to_neon",
+        python_callable=make_neon_sync_task(
+            ["stock_news"],
+            not_null_map={"stock_news": ["title", "url"]},
+        ),
+    )
+
+    [yf_group, gn_group] >> analyze >> complete >> sync_neon

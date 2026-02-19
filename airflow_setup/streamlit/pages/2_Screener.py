@@ -5,27 +5,36 @@ Screener — Filter all tracked symbols by technical conditions.
 import pandas as pd
 import streamlit as st
 
+import _nav
 from db import (
     SYMBOL_NAMES,
     compute_overall_signal, detect_signals, load_overview_data,
     signal_badge_html,
 )
 
+st.set_page_config(page_title="AlphaBoard — 스크리너", page_icon="🔍", layout="wide")
+_nav.inject()
+
 with st.sidebar:
-    st.header("스크리너 필터")
-
-    rsi_range = st.slider("RSI 범위", 0, 100, (0, 100))
-    ma200_pos = st.multiselect("SMA200 기준", ["상방", "하방"], default=["상방", "하방"])
-    macd_dir  = st.multiselect("MACD 방향", ["강세", "약세"], default=["강세", "약세"])
-    bb_pos    = st.multiselect("BB 위치", ["상단 근접", "중간 구간", "하단 근접"], default=["상단 근접", "중간 구간", "하단 근접"])
-    sig_filter = st.multiselect("종합 신호", ["강력매수", "매수", "중립", "매도", "강력매도"],
-                                default=["강력매수", "매수", "중립", "매도", "강력매도"])
-
-    if st.button("🔄 새로고침", use_container_width=True):
+    _nav.section("기술적 필터")
+    rsi_range  = st.slider("RSI 범위", 0, 100, (0, 100))
+    ma200_pos  = st.multiselect("SMA200 기준", ["상방", "하방"], default=["상방", "하방"])
+    macd_dir   = st.multiselect("MACD 방향", ["강세", "약세"], default=["강세", "약세"])
+    bb_pos     = st.multiselect("BB 위치", ["상단 근접", "중간 구간", "하단 근접"],
+                                default=["상단 근접", "중간 구간", "하단 근접"])
+    _nav.section("신호 필터")
+    sig_filter = st.multiselect(
+        "종합 신호", ["강력매수", "매수", "중립", "매도", "강력매도"],
+        default=["강력매수", "매수", "중립", "매도", "강력매도"],
+        label_visibility="collapsed",
+    )
+    st.divider()
+    if st.button("↺  새로고침", use_container_width=True):
         st.cache_data.clear()
         st.rerun()
+    _nav.status_bar("기술적 지표 기반 필터")
 
-st.title("🔍 기술적 스크리너")
+st.header("기술적 스크리너", divider="blue")
 st.caption("현재 기술적 지표 기반으로 모든 종목을 필터링합니다.")
 
 df = load_overview_data()

@@ -8,7 +8,11 @@ from datetime import datetime
 import pandas as pd
 import streamlit as st
 
-from db import ALL_SYMBOLS, SYMBOL_NAMES, load_news
+import _nav
+from db import NEWS_SYMBOLS, SYMBOL_NAMES, load_news
+
+st.set_page_config(page_title="AlphaBoard — 뉴스 피드", page_icon="📰", layout="wide")
+_nav.inject()
 
 # ── Sentiment badge helpers ────────────────────────────────────────────────────
 _SENTIMENT_STYLE = {
@@ -26,24 +30,29 @@ def _sentiment_badge(sentiment: str) -> str:
 
 # ── Sidebar ────────────────────────────────────────────────────────────────────
 with st.sidebar:
-    st.header("뉴스 필터")
+    _nav.section("종목 필터")
     sym_filter = st.multiselect(
         "종목 필터",
-        ALL_SYMBOLS,
+        NEWS_SYMBOLS,
         format_func=lambda s: f"{s} — {SYMBOL_NAMES.get(s, s)}",
+        label_visibility="collapsed",
     )
+    _nav.section("센티먼트")
     sentiment_filter = st.multiselect(
         "호재/악재 필터",
         ["호재", "악재", "중립"],
         default=[],
+        label_visibility="collapsed",
     )
-    limit = st.slider("최대 기사 수", 20, 200, 60, step=20)
-
-    if st.button("🔄 새로고침", use_container_width=True):
+    _nav.section("표시 설정")
+    limit = st.slider("최대 기사 수", 20, 200, 60, step=20, label_visibility="collapsed")
+    st.divider()
+    if st.button("↺  새로고침", use_container_width=True):
         st.cache_data.clear()
         st.rerun()
+    _nav.status_bar("yfinance · Google News RSS")
 
-st.title("📰 뉴스 피드")
+st.header("뉴스 피드", divider="blue")
 
 # ── Load news ──────────────────────────────────────────────────────────────────
 if sym_filter:
