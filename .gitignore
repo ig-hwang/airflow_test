@@ -21,3 +21,12 @@ airflow_setup/plugins/
 
 # OS
 .DS_Store
+
+# Claude Code
+.claude/
+
+# Virtual envs (non-standard names)
+claude-env/
+
+# Cron logs
+airflow_setup/scripts/logs/
