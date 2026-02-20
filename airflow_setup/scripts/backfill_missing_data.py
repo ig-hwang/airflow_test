@@ -61,22 +61,31 @@ except ImportError:
     log.info("Using requests session (no curl_cffi)")
 
 # ── Symbols ───────────────────────────────────────────────────────────────
-US_SYMBOLS = [
-    "AVGO", "BE", "VRT", "SMR", "OKLO",
-    "GEV", "MRVL", "COHR", "LITE", "VST", "ETN",
-    "AAPL", "MSFT", "AMZN", "NVDA", "META", "GOOGL",
-    "BRK-B", "JPM", "UNH", "JNJ", "LLY", "PFE", "MRK", "ABBV",
-    "AMGN", "ISRG", "PEP", "KO", "VZ", "CSCO",
-    "AMD", "MU", "AMAT", "MP",
-    "TSM", "ASML", "ABBNY",
-]
-KR_SYMBOLS = [
-    "267260.KS", "034020.KS", "028260.KS", "267270.KS", "010120.KS",
-]
-ADR_SYMBOLS = [
-    "SBGSY", "HTHIY", "FANUY", "KYOCY", "SMCAY",
-]
-ALL_SYMBOLS = US_SYMBOLS + KR_SYMBOLS + ADR_SYMBOLS
+def _load_symbols() -> list[str]:
+    """Load active symbols from stock_symbols table."""
+    try:
+        result = _neon("SELECT symbol FROM stock_symbols WHERE active = TRUE ORDER BY symbol")
+        rows = result.get("rows", [])
+        symbols = [r["symbol"] for r in rows]
+        log.info("Loaded %d active symbols from database", len(symbols))
+        return symbols
+    except Exception as e:
+        log.warning("Failed to load symbols from database: %s. Using fallback.", e)
+        # Fallback to hardcoded list
+        return [
+            "AVGO", "BE", "VRT", "SMR", "OKLO",
+            "GEV", "MRVL", "COHR", "LITE", "VST", "ETN",
+            "AAPL", "MSFT", "AMZN", "NVDA", "META", "GOOGL",
+            "BRK-B", "JPM", "UNH", "JNJ", "LLY", "PFE", "MRK", "ABBV",
+            "AMGN", "ISRG", "PEP", "KO", "VZ", "CSCO",
+            "AMD", "MU", "AMAT", "MP",
+            "TSM", "ASML", "ABBNY",
+            "UBER",  # NEW
+            "267260.KS", "034020.KS", "028260.KS", "267270.KS", "010120.KS",
+            "SBGSY", "HTHIY", "FANUY", "KYOCY", "SMCAY",
+        ]
+
+ALL_SYMBOLS = _load_symbols()
 
 
 # ── Batch upsert helper ────────────────────────────────────────────────────

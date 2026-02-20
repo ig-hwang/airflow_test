@@ -18,7 +18,9 @@ from sqlalchemy import create_engine, text
 log = logging.getLogger(__name__)
 
 # ── Symbols ────────────────────────────────────────────────────────────────
-US_SYMBOLS = [
+# DEPRECATED: Use get_symbols() instead to load from database
+# These are kept as fallback if database is unavailable
+_US_SYMBOLS_FALLBACK = [
     # 기존 테마주 (에너지/반도체/인프라)
     "AVGO", "BE", "VRT", "SMR", "OKLO",
     "GEV", "MRVL", "COHR", "LITE", "VST", "ETN",
@@ -31,18 +33,73 @@ US_SYMBOLS = [
     "AMD", "MU", "AMAT", "MP",
     # 글로벌 (US 거래소 상장)
     "TSM", "ASML", "ABBNY",
+    # 신규
+    "UBER",
 ]
-KR_SYMBOLS = [
+_KR_SYMBOLS_FALLBACK = [
     "267260.KS", "034020.KS", "028260.KS", "267270.KS", "010120.KS",
 ]
-ADR_SYMBOLS = [
+_ADR_SYMBOLS_FALLBACK = [
     "SBGSY",   # Schneider Electric
     "HTHIY",   # Hitachi
     "FANUY",   # Fanuc
     "KYOCY",   # Keyence
     "SMCAY",   # SMC Corp
 ]
-ALL_SYMBOLS = US_SYMBOLS + KR_SYMBOLS + ADR_SYMBOLS  # 48 total
+
+# Cached symbols loaded from database
+_SYMBOLS_CACHE = None
+
+
+def get_symbols(category: str = "ALL", force_reload: bool = False) -> list[str]:
+    """
+    Load active stock symbols from database.
+
+    Args:
+        category: "US", "KR", "ADR", or "ALL" (default)
+        force_reload: Clear cache and reload from database
+
+    Returns:
+        List of active stock symbols
+    """
+    global _SYMBOLS_CACHE
+
+    if force_reload:
+        _SYMBOLS_CACHE = None
+
+    if _SYMBOLS_CACHE is None:
+        try:
+            engine = get_engine()
+            with engine.connect() as conn:
+                result = conn.execute(text(
+                    "SELECT symbol, category FROM stock_symbols WHERE active = TRUE ORDER BY symbol"
+                ))
+                rows = result.fetchall()
+                _SYMBOLS_CACHE = {
+                    "US": [r[0] for r in rows if r[1] == "US"],
+                    "KR": [r[0] for r in rows if r[1] == "KR"],
+                    "ADR": [r[0] for r in rows if r[1] == "ADR"],
+                }
+            log.info("Loaded %d symbols from database", sum(len(v) for v in _SYMBOLS_CACHE.values()))
+        except Exception as e:
+            log.warning("Failed to load symbols from database, using fallback: %s", e)
+            _SYMBOLS_CACHE = {
+                "US": _US_SYMBOLS_FALLBACK,
+                "KR": _KR_SYMBOLS_FALLBACK,
+                "ADR": _ADR_SYMBOLS_FALLBACK,
+            }
+
+    if category == "ALL":
+        return _SYMBOLS_CACHE["US"] + _SYMBOLS_CACHE["KR"] + _SYMBOLS_CACHE["ADR"]
+    else:
+        return _SYMBOLS_CACHE.get(category, [])
+
+
+# Backward compatibility: maintain old variable names
+US_SYMBOLS = get_symbols("US")
+KR_SYMBOLS = get_symbols("KR")
+ADR_SYMBOLS = get_symbols("ADR")
+ALL_SYMBOLS = get_symbols("ALL")
 
 # ── Default args ───────────────────────────────────────────────────────────
 DEFAULT_ARGS = {

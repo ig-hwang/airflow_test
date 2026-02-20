@@ -69,51 +69,53 @@ _RSS_SESSION = _requests.Session()
 _RSS_SESSION.verify = False
 _RSS_SESSION.headers.update({"User-Agent": "Mozilla/5.0 (compatible; RSS reader)"})
 
-# ── Constants (from news_dag.py) ──────────────────────────────────────────
-ALL_SYMBOLS = [
-    "AVGO", "BE", "VRT", "SMR", "OKLO", "GEV", "MRVL", "COHR", "LITE", "VST", "ETN",
-    "AAPL", "MSFT", "AMZN", "NVDA", "META", "GOOGL",
-    "BRK-B", "JPM", "UNH", "JNJ", "LLY", "PFE", "MRK", "ABBV",
-    "AMGN", "ISRG", "PEP", "KO", "VZ", "CSCO",
-    "AMD", "MU", "AMAT", "MP",
-    "TSM", "ASML", "ABBNY",
-    "267260.KS", "034020.KS", "028260.KS", "267270.KS", "010120.KS",
-    "SBGSY", "HTHIY", "FANUY", "KYOCY", "SMCAY",
-]
+# ── Load symbols from database ────────────────────────────────────────────
+def _load_symbols_from_db():
+    """Load active symbols with metadata from stock_symbols table."""
+    try:
+        result = neon_rows("""
+            SELECT symbol, name, google_query
+            FROM stock_symbols
+            WHERE active = TRUE
+            ORDER BY symbol
+        """)
+        symbols = [r["symbol"] for r in result]
+        names = {r["symbol"]: r["name"] for r in result if r["name"]}
+        queries = [(r["symbol"], r["google_query"]) for r in result if r["google_query"]]
+        log.info("Loaded %d symbols from database", len(symbols))
+        return symbols, names, queries
+    except Exception as e:
+        log.warning("Failed to load symbols from database: %s. Using fallback.", e)
+        # Fallback to hardcoded values
+        symbols = [
+            "AVGO", "BE", "VRT", "SMR", "OKLO", "GEV", "MRVL", "COHR", "LITE", "VST", "ETN",
+            "AAPL", "MSFT", "AMZN", "NVDA", "META", "GOOGL",
+            "BRK-B", "JPM", "UNH", "JNJ", "LLY", "PFE", "MRK", "ABBV",
+            "AMGN", "ISRG", "PEP", "KO", "VZ", "CSCO",
+            "AMD", "MU", "AMAT", "MP",
+            "TSM", "ASML", "ABBNY", "UBER",
+            "267260.KS", "034020.KS", "028260.KS", "267270.KS", "010120.KS",
+            "SBGSY", "HTHIY", "FANUY", "KYOCY", "SMCAY",
+        ]
+        names = {
+            "AVGO": "Broadcom", "BE": "Bloom Energy", "VRT": "Vertiv",
+            "SMR": "NuScale Power", "OKLO": "Oklo", "GEV": "GE Vernova",
+            "UBER": "Uber Technologies",
+        }
+        queries = [
+            ("AVGO", "Broadcom AVGO stock"),
+            ("UBER", "Uber UBER stock"),
+            ("267260.KS",  "HD현대일렉트릭"),
+            ("034020.KS",  "두산에너빌리티"),
+            ("028260.KS",  "삼성물산"),
+            ("267270.KS",  "HD현대중공업"),
+            ("010120.KS",  "LS ELECTRIC"),
+            ("SBGSY",      "Schneider Electric SBGSY"),
+            ("HTHIY",      "Hitachi HTHIY stock"),
+        ]
+        return symbols, names, queries
 
-SYMBOL_NAMES = {
-    "AVGO": "Broadcom", "BE": "Bloom Energy", "VRT": "Vertiv",
-    "SMR": "NuScale Power", "OKLO": "Oklo", "GEV": "GE Vernova",
-    "MRVL": "Marvell Technology", "COHR": "Coherent Corp", "LITE": "Lumentum",
-    "VST": "Vistra Energy", "ETN": "Eaton Corporation",
-    "267260.KS": "HD현대일렉트릭", "034020.KS": "두산에너빌리티",
-    "028260.KS": "삼성물산", "267270.KS": "HD현대중공업", "010120.KS": "LS ELECTRIC",
-    "SBGSY": "Schneider Electric", "HTHIY": "Hitachi",
-    "TerraPower": "TerraPower", "X-Energy": "X-Energy",
-}
-
-GOOGLE_NEWS_QUERIES = [
-    ("AVGO",       "Broadcom AVGO stock"),
-    ("BE",         "Bloom Energy stock"),
-    ("VRT",        "Vertiv Holdings stock"),
-    ("SMR",        "NuScale Power SMR stock"),
-    ("OKLO",       "Oklo nuclear stock"),
-    ("GEV",        "GE Vernova stock"),
-    ("MRVL",       "Marvell Technology stock"),
-    ("COHR",       "Coherent Corp stock"),
-    ("LITE",       "Lumentum Holdings stock"),
-    ("VST",        "Vistra Energy stock"),
-    ("ETN",        "Eaton Corporation stock"),
-    ("267260.KS",  "HD현대일렉트릭"),
-    ("034020.KS",  "두산에너빌리티"),
-    ("028260.KS",  "삼성물산"),
-    ("267270.KS",  "HD현대중공업"),
-    ("010120.KS",  "LS ELECTRIC"),
-    ("SBGSY",      "Schneider Electric SBGSY"),
-    ("HTHIY",      "Hitachi HTHIY stock"),
-    ("TerraPower", "TerraPower nuclear"),
-    ("X-Energy",   "X-energy reactor"),
-]
+ALL_SYMBOLS, SYMBOL_NAMES, GOOGLE_NEWS_QUERIES = _load_symbols_from_db()
 
 MARKET_FEEDS = [
     ("미국 경제 & 연준",  "Federal Reserve interest rates CPI inflation GDP US economy"),

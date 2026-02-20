@@ -92,24 +92,41 @@ SYMBOL_CATEGORY = {
     "TSM": "ADR", "ASML": "ADR", "ABBNY": "ADR",
 }
 
-US_SYMBOLS = [
-    "AVGO", "BE", "VRT", "SMR", "OKLO",
-    "GEV", "MRVL", "COHR", "LITE", "VST", "ETN",
-    "AAPL", "MSFT", "AMZN", "NVDA", "META", "GOOGL",
-    "BRK-B", "JPM", "UNH", "JNJ", "LLY", "PFE", "MRK", "ABBV",
-    "AMGN", "ISRG", "PEP", "KO", "VZ", "CSCO",
-    "AMD", "MU", "AMAT", "MP",
-    "TSM", "ASML", "ABBNY",
-]
-KR_SYMBOLS = [
-    "267260.KS", "034020.KS", "028260.KS", "267270.KS", "010120.KS",
-]
-ADR_SYMBOLS = [
-    "SBGSY", "HTHIY", "FANUY", "KYOCY", "SMCAY",
-]
-ALL_SYMBOLS    = US_SYMBOLS + KR_SYMBOLS + ADR_SYMBOLS  # 48개 (시세 수집 대상)
-PRIVATE_SYMBOLS = ["TerraPower", "X-Energy"]            # 비상장 (뉴스 전용)
-NEWS_SYMBOLS   = ALL_SYMBOLS + PRIVATE_SYMBOLS          # 뉴스피드 필터용 전체 목록
+# Load symbols from stock_symbols table (cached for 5 minutes)
+@st.cache_data(ttl=300)
+def load_symbol_metadata():
+    """Load symbol metadata from stock_symbols table."""
+    try:
+        with get_engine().connect() as conn:
+            rows = conn.execute(text("""
+                SELECT symbol, name, category
+                FROM stock_symbols
+                WHERE active = TRUE
+                ORDER BY symbol
+            """)).fetchall()
+            symbols_by_cat = {"US": [], "KR": [], "ADR": []}
+            for r in rows:
+                symbols_by_cat[r[2]].append(r[0])
+            return symbols_by_cat
+    except Exception:
+        # Fallback to hardcoded if table doesn't exist yet
+        return {
+            "US": ["AVGO", "BE", "VRT", "SMR", "OKLO", "GEV", "MRVL", "COHR", "LITE", "VST", "ETN",
+                   "AAPL", "MSFT", "AMZN", "NVDA", "META", "GOOGL",
+                   "BRK-B", "JPM", "UNH", "JNJ", "LLY", "PFE", "MRK", "ABBV",
+                   "AMGN", "ISRG", "PEP", "KO", "VZ", "CSCO",
+                   "AMD", "MU", "AMAT", "MP", "TSM", "ASML", "ABBNY", "UBER"],
+            "KR": ["267260.KS", "034020.KS", "028260.KS", "267270.KS", "010120.KS"],
+            "ADR": ["SBGSY", "HTHIY", "FANUY", "KYOCY", "SMCAY"],
+        }
+
+_SYMBOLS = load_symbol_metadata()
+US_SYMBOLS     = _SYMBOLS["US"]
+KR_SYMBOLS     = _SYMBOLS["KR"]
+ADR_SYMBOLS    = _SYMBOLS["ADR"]
+ALL_SYMBOLS    = US_SYMBOLS + KR_SYMBOLS + ADR_SYMBOLS
+PRIVATE_SYMBOLS = ["TerraPower", "X-Energy"]  # 비상장 (뉴스 전용)
+NEWS_SYMBOLS   = ALL_SYMBOLS + PRIVATE_SYMBOLS
 
 TIMEFRAME_DAYS = {
     "1W": 7, "1M": 30, "3M": 90, "6M": 180,
