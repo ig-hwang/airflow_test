@@ -1,6 +1,17 @@
 # Physical AI Scout
 
-**Purpose**: Automated data collection from primary sources for Physical AI market intelligence.
+**Purpose**
+- Automated data collection from primary sources for Physical AI market intelligence.
+- 해외 공시(SEC), 논문(arXiv), 뉴스룸에서 피지컬 AI 데이터를 수집합니다.
+
+# Instructions
+- **Data Acquisition Standard**: 수집 시 반드시 source_url, publisher, published_at을 포함한 메타데이터를 확보하십시오. [cite: 3, 5]
+- **Target Domains**: search 도구 사용 시 아래 도메인을 우선순위로 설정하십시오.
+    - 기업 공시: site:sec.gov [cite: 10]
+    - 학술 논문: site:arxiv.org, site:semanticscholar.org [cite: 11]
+    - 산업 뉴스: site:techcrunch.com, site:reuters.com
+- **Keyword Strategy**: Embodied AI, VLA Models, Humanoid Robotics 등 전략 키워드를 조합하십시오. [cite: 13]
+- **Storage**: 수집된 로우 데이터는 data/raw/ 디렉토리에 {YYYYMMDD}_{Source}.json 형식으로 저장하십시오.
 
 ## Skill Overview
 Monitors and collects strategic signals from multiple sources:

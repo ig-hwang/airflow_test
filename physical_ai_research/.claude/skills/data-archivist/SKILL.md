@@ -1,12 +1,29 @@
 # Data Archivist
 
-**Purpose**: Validate, structure, and persist Physical AI research data to BigQuery with complete traceability.
+**Purpose**: Validate, structure, and persist Physical AI research data to PostgreSQL with complete traceability.
+
+# Database Operations Standard
+
+## 1. SQL Best Practices
+- **No SELECT ***: 모든 쿼리에서 명시적 컬럼명을 사용하십시오.
+- **Deduplication**: source_url 기준 중복 방지를 위해 ON CONFLICT 구문을 활용하십시오.
+- **Logic**: Window Function(ROW_NUMBER())을 사용하여 최신 데이터만 추출하십시오.
+
+## 2. Performance & Integrity
+- **Indexing**: source_url, published_at, scope 컬럼에 인덱스 생성하여 조회 성능 확보하십시오.
+- **Partitioning**: published_at 기준 월별 파티셔닝으로 대용량 데이터 관리하십시오.
+- **Idempotency**: event_id 기반 UPSERT로 데이터 재현성을 보장하십시오.
+- **Transactions**: BEGIN/COMMIT을 사용하여 원자성을 보장하십시오.
+
+# Grain & Cardinality
+- **Grain**: 단일 기사/논문/공시 레코드 1건.
+- **Join Cardinality**: signals(N) : weekly_reports(1).
 
 ## Skill Overview
 Manages the entire data lifecycle:
 - Schema validation & enforcement
 - Deduplication & quality checks
-- BigQuery ingestion with partitioning
+- PostgreSQL ingestion with partitioning
 - Metadata enrichment & lineage tracking
 
 ## Input Parameters
@@ -22,43 +39,58 @@ Manages the entire data lifecycle:
       "source_metadata": {...}
     }
   ],
-  "destination": "bigquery",
-  "dataset": "physical_ai_research",
+  "destination": "postgresql",
+  "schema": "public",
   "table": "market_signals",
   "partition_field": "published_at"
 }
 ```
 
-## Output Schema (BigQuery DDL)
+## Output Schema (PostgreSQL DDL)
 ```sql
-CREATE TABLE `physical_ai_research.market_signals`
-(
-  event_id              STRING NOT NULL,
-  scope                 STRING NOT NULL,  -- Market|Tech|Case|Policy
-  category              STRING,
-  title                 STRING NOT NULL,
-  summary               STRING,
-  strategic_implication STRING,
-  key_insights          ARRAY<STRING>,
+CREATE TABLE IF NOT EXISTS market_signals (
+  id                    SERIAL PRIMARY KEY,
+  event_id              VARCHAR(36) NOT NULL UNIQUE,
+  scope                 VARCHAR(20) NOT NULL CHECK (scope IN ('Market', 'Tech', 'Case', 'Policy')),
+  category              VARCHAR(100),
+  title                 TEXT NOT NULL,
+  summary               TEXT,
+  strategic_implication TEXT,
+  key_insights          TEXT[],  -- PostgreSQL array
 
   -- Source Metadata
-  source_url            STRING NOT NULL,
-  publisher             STRING,
+  source_url            TEXT NOT NULL,
+  publisher             VARCHAR(200),
   published_at          TIMESTAMP NOT NULL,
   scraped_at            TIMESTAMP NOT NULL,
-  confidence_score      FLOAT64,
+  confidence_score      DECIMAL(3,2) CHECK (confidence_score BETWEEN 0 AND 1),
 
   -- Lineage Metadata
-  processing_pipeline   STRING,  -- scout -> analysis -> archivist
-  processed_at          TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
-  schema_version        STRING DEFAULT 'v1.0',
+  processing_pipeline   VARCHAR(100) DEFAULT 'scout->analysis->archivist',
+  processed_at          TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  schema_version        VARCHAR(10) DEFAULT 'v1.0',
 
   -- Quality Metrics
-  data_quality_score    FLOAT64,
-  validation_errors     ARRAY<STRING>
-)
-PARTITION BY DATE(published_at)
-CLUSTER BY scope, category;
+  data_quality_score    DECIMAL(3,2),
+  validation_errors     TEXT[],
+
+  created_at            TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at            TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) PARTITION BY RANGE (published_at);
+
+-- Create monthly partitions (example for 2024)
+CREATE TABLE market_signals_2024_01 PARTITION OF market_signals
+  FOR VALUES FROM ('2024-01-01') TO ('2024-02-01');
+
+CREATE TABLE market_signals_2024_02 PARTITION OF market_signals
+  FOR VALUES FROM ('2024-02-01') TO ('2024-03-01');
+
+-- Create indexes for performance
+CREATE INDEX idx_market_signals_published_at ON market_signals (published_at DESC);
+CREATE INDEX idx_market_signals_scope ON market_signals (scope);
+CREATE INDEX idx_market_signals_category ON market_signals (category);
+CREATE INDEX idx_market_signals_source_url ON market_signals USING HASH (source_url);
+CREATE INDEX idx_market_signals_event_id ON market_signals (event_id);
 ```
 
 ## Key Functions
@@ -110,17 +142,21 @@ def deduplicate_records(
 
 **Dedup Logic:**
 ```sql
--- Example: QUALIFY for deduplication in BigQuery
-SELECT
-  event_id,
-  title,
-  published_at,
-  ROW_NUMBER() OVER (
-    PARTITION BY source_url
-    ORDER BY scraped_at DESC
-  ) AS rn
-FROM market_signals
-QUALIFY rn = 1;
+-- Example: Window function for deduplication in PostgreSQL
+WITH ranked_signals AS (
+  SELECT
+    event_id,
+    title,
+    published_at,
+    ROW_NUMBER() OVER (
+      PARTITION BY source_url
+      ORDER BY scraped_at DESC
+    ) AS rn
+  FROM market_signals
+)
+SELECT event_id, title, published_at
+FROM ranked_signals
+WHERE rn = 1;
 ```
 
 ### 3. Quality Scoring
@@ -149,21 +185,20 @@ def calculate_quality_score(record: dict) -> float:
 | Content | 20% | Summary length, keyword density |
 | Timeliness | 10% | Published within 30 days? |
 
-### 4. BigQuery Ingestion
+### 4. PostgreSQL Ingestion
 ```python
-def ingest_to_bigquery(
+def ingest_to_postgresql(
     records: list[dict],
-    dataset: str = "physical_ai_research",
     table: str = "market_signals",
-    write_disposition: str = "WRITE_APPEND"
+    conn_string: str = None
 ) -> dict:
     """
-    Batch insert to BigQuery with partitioning.
+    Batch upsert to PostgreSQL using ON CONFLICT.
 
     Features:
-    - Automatic partitioning by published_at
-    - Clustering by scope + category
-    - Idempotent (MERGE on event_id)
+    - Automatic partitioning by published_at (monthly)
+    - Indexed by scope, category, source_url
+    - Idempotent (ON CONFLICT DO UPDATE on event_id)
 
     Returns: {
       "rows_inserted": int,
@@ -175,16 +210,22 @@ def ingest_to_bigquery(
 
 **Upsert Logic (Idempotent):**
 ```sql
-MERGE `physical_ai_research.market_signals` AS target
-USING new_data AS source
-ON target.event_id = source.event_id
-WHEN MATCHED THEN
-  UPDATE SET
-    summary = source.summary,
-    strategic_implication = source.strategic_implication,
-    processed_at = CURRENT_TIMESTAMP()
-WHEN NOT MATCHED THEN
-  INSERT ROW;
+-- PostgreSQL UPSERT using ON CONFLICT
+INSERT INTO market_signals (
+  event_id, scope, category, title, summary, strategic_implication,
+  source_url, publisher, published_at, scraped_at, confidence_score,
+  data_quality_score
+)
+VALUES (
+  $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12
+)
+ON CONFLICT (event_id)
+DO UPDATE SET
+  summary = EXCLUDED.summary,
+  strategic_implication = EXCLUDED.strategic_implication,
+  updated_at = CURRENT_TIMESTAMP
+RETURNING id, event_id, (xmax = 0) AS inserted;
+-- xmax = 0 means INSERT, xmax != 0 means UPDATE
 ```
 
 ## Data Pipeline Workflow
@@ -208,37 +249,46 @@ WHEN NOT MATCHED THEN
          │
          ▼  (validate → dedupe → score → ingest)
 ┌─────────────────┐
-│ BigQuery        │
-│ physical_ai     │
-│ _research       │
+│ PostgreSQL      │
+│ market_signals  │
+│ (partitioned)   │
 └─────────────────┘
 ```
 
 ## Partitioning Strategy
 
-### Date Partitioning (Mandatory)
+### Date Partitioning (Recommended for large datasets)
 ```sql
--- Partition by published_at (daily)
-PARTITION BY DATE(published_at)
+-- Monthly partitioning by published_at
+CREATE TABLE market_signals (
+  ...
+) PARTITION BY RANGE (published_at);
 
--- Partition pruning example:
-SELECT *
+-- Auto-create future partitions using pg_partman extension (optional)
+-- Or manually create partitions:
+CREATE TABLE market_signals_2024_03 PARTITION OF market_signals
+  FOR VALUES FROM ('2024-03-01') TO ('2024-04-01');
+
+-- Partition pruning example (automatic in PostgreSQL 11+):
+SELECT event_id, title, scope
 FROM market_signals
-WHERE DATE(published_at) BETWEEN '2024-01-01' AND '2024-01-31'
--- Only scans 31 partitions instead of full table
+WHERE published_at BETWEEN '2024-01-01' AND '2024-01-31';
+-- Only scans market_signals_2024_01 partition
 ```
 
-### Clustering (Optional but Recommended)
+### Indexing Strategy (Essential for performance)
 ```sql
-CLUSTER BY scope, category
+-- Multi-column index for common queries
+CREATE INDEX idx_scope_category_date ON market_signals (scope, category, published_at DESC);
 
 -- Efficient filtering:
-SELECT *
+SELECT event_id, title, summary
 FROM market_signals
 WHERE scope = 'Market'
   AND category = 'M&A'
-  AND DATE(published_at) = '2024-02-20'
--- Combines partition + cluster for minimal scan
+  AND published_at >= '2024-02-01'
+ORDER BY published_at DESC;
+-- Uses idx_scope_category_date for optimal performance
 ```
 
 ## Error Handling
@@ -258,16 +308,29 @@ except Exception as e:
     raise
 ```
 
-### BigQuery Quota Errors
+### PostgreSQL Connection Errors
 ```python
 # Retry with exponential backoff
-from google.api_core import retry
+import psycopg2
+from psycopg2 import OperationalError
+import time
 
-@retry.Retry(predicate=retry.if_exception_type(
-    google.api_core.exceptions.ResourceExhausted
-))
-def ingest_with_retry(records):
-    return client.insert_rows_json(table, records)
+def ingest_with_retry(records, max_retries=3):
+    for attempt in range(max_retries):
+        try:
+            with psycopg2.connect(conn_string) as conn:
+                with conn.cursor() as cur:
+                    # Batch insert with executemany
+                    cur.executemany(upsert_sql, records)
+                conn.commit()
+                return {"success": True}
+        except OperationalError as e:
+            if attempt < max_retries - 1:
+                wait_time = 2 ** attempt
+                log.warning(f"Connection failed, retrying in {wait_time}s...")
+                time.sleep(wait_time)
+            else:
+                raise
 ```
 
 ## Quality Checks
@@ -288,9 +351,9 @@ SELECT
   COUNT(*) AS num_signals,
   AVG(data_quality_score) AS avg_quality
 FROM market_signals
-WHERE DATE(processed_at) >= CURRENT_DATE() - 7
-GROUP BY 1, 2
-ORDER BY 1 DESC;
+WHERE processed_at >= CURRENT_DATE - INTERVAL '7 days'
+GROUP BY DATE(processed_at), scope
+ORDER BY date DESC;
 ```
 
 ### Alert Thresholds
@@ -302,7 +365,6 @@ ORDER BY 1 DESC;
 ```bash
 claude-skill data-archivist \
   --input strategic-signals.json \
-  --dataset "physical_ai_research" \
   --table "market_signals" \
   --validate-only false \
   --output ingestion-report.json
@@ -310,6 +372,12 @@ claude-skill data-archivist \
 
 ## Integration Points
 - Consumes from: `strategic-analysis` (validated signals)
-- Persists to: BigQuery (partitioned tables)
-- Requires: GCP credentials, BigQuery API access
-- Monitors: Airflow for orchestration, Datadog for metrics
+- Persists to: PostgreSQL (partitioned tables)
+- Requires: PostgreSQL connection string (psycopg2/SQLAlchemy)
+- Monitors: Airflow for orchestration, custom metrics dashboard
+
+## Required Tools & Dependencies
+- **Python**: psycopg2-binary or asyncpg for PostgreSQL connection
+- **SQLAlchemy**: ORM for database operations (optional but recommended)
+- **PostgreSQL**: v12+ for native partitioning support
+- **Extensions**: pg_partman (optional, for automatic partition management)
