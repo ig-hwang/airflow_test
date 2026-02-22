@@ -2,6 +2,13 @@
 
 **Purpose**: Extract strategic implications from collected Physical AI signals for LG Uplus portfolio strategy.
 
+# Instructions
+- **Analysis Standard**: 피라미드 원칙(Conclusion → Evidence → Actions)에 따라 결론 우선으로 작성하십시오.
+- **LGU+ Relevance Filter**: 모든 분석에서 LG유플러스 관점의 시사점(Direct Impact, Future Opportunity, Competitive Threat, Partnership Potential)을 명시하십시오.
+- **Confidence Scoring**: 신뢰도 점수(0.0-1.0)를 산출하되, 1차 자료(SEC, arXiv) > 2차 자료(뉴스)로 가중치를 부여하십시오.
+- **Frameworks**: 분석 유형별 프레임워크(Competitive/Tech Trend/Investment/Regulatory)를 명시적으로 적용하십시오.
+- **Target Companies**: Tesla, Figure AI, Boston Dynamics, NVIDIA, Amazon 등 핵심 기업에 집중하십시오.
+
 ## Skill Overview
 Analyzes raw data from `physical-ai-scout` to derive actionable insights:
 - Competitive landscape mapping
@@ -184,5 +191,5 @@ claude-skill strategic-analysis \
 
 ## Integration Points
 - Consumes from: `physical-ai-scout` (raw signals)
-- Feeds into: `data-archivist` (for BigQuery storage)
+- Feeds into: `data-archivist` (for PostgreSQL storage)
 - Requires: Claude API (for LLM-based insight extraction)

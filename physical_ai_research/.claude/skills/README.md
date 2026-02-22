@@ -23,6 +23,7 @@ This directory contains specialized Claude Code skills for the Physical AI Strat
 - **Strategic Implication**: LG유플러스에 주는 영향 및 대응 방안.
 - **Next Steps**: 추가 리서치 또는 모니터링이 필요한 항목.
 
+
 ## Purpose
 Custom skills designed for automated research tasks specific to Physical AI market intelligence:
 - SEC filing analysis (10-K, 8-K)
