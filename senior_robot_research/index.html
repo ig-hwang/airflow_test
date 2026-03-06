@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>시니어 케어 로봇 해외 사례 리서치 | LG U+ 비즈니스 기회 탐색</title>
+  <style>
+    /* ── CodePen-inspired design ── */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    :root {
+      --bg:          #1e1f26;
+      --surface:     #272935;
+      --surface2:    #2e3040;
+      --border:      #3a3d52;
+      --accent:      #47cf73;
+      --accent2:     #58a6ff;
+      --accent3:     #e06c75;
+      --accent4:     #e5c07b;
+      --accent5:     #c678dd;
+      --text:        #abb2bf;
+      --text-hi:     #e6e9f0;
+      --text-muted:  #636d83;
+      --header-h:    56px;
+      --tag-green:   #1e3a28;
+      --tag-blue:    #1b2e45;
+      --tag-purple:  #2e1e45;
+      --tag-yellow:  #3d3218;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: var(--header-h);
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      gap: 16px;
+    }
+
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--text-hi);
+    }
+
+    .logo-dot {
+      width: 28px;
+      height: 28px;
+      background: var(--accent);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .header-badge {
+      margin-left: 8px;
+      background: #c50077;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 3px;
+      letter-spacing: 0.5px;
+    }
+
+    .header-meta {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
+    .header-meta span {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 4px;
+    }
+
+    /* ── LAYOUT ── */
+    .wrapper {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(135deg, #1b2c42 0%, #1e1f26 60%, #1a2232 100%);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 48px;
+      margin-bottom: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(71,207,115,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--text-hi);
+      line-height: 1.3;
+      margin-bottom: 12px;
+    }
+
+    .hero h1 span { color: var(--accent); }
+
+    .hero-sub {
+      font-size: 15px;
+      color: var(--text);
+      max-width: 680px;
+      margin-bottom: 28px;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--accent);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── SECTION TITLE ── */
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-title::before {
+      content: '//';
+      color: var(--accent);
+    }
+
+    /* ── MARKET OVERVIEW ── */
+    .market-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .market-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      transition: border-color 0.2s;
+    }
+
+    .market-card:hover { border-color: var(--accent); }
+
+    .market-card-icon {
+      font-size: 24px;
+      margin-bottom: 12px;
+    }
+
+    .market-card-value {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-hi);
+      font-family: 'JetBrains Mono', monospace;
+      margin-bottom: 4px;
+    }
+
+    .market-card-label {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .market-card-source {
+      margin-top: 10px;
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .market-card-source a {
+      color: var(--accent2);
+      text-decoration: none;
+    }
+
+    .market-card-source a:hover { text-decoration: underline; }
+
+    /* ── CASE CARDS ── */
+    .cases-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    .case-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: border-color 0.2s, transform 0.15s;
+    }
+
+    .case-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .case-header {
+      padding: 20px 24px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .case-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      background: rgba(71,207,115,0.1);
+      border: 1px solid rgba(71,207,115,0.25);
+      border-radius: 4px;
+      padding: 2px 8px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .case-title-wrap { flex: 1; }
+
+    .case-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-hi);
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+
+    .case-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 3px;
+      letter-spacing: 0.4px;
+    }
+
+    .tag-country {
+      background: var(--tag-blue);
+      color: var(--accent2);
+      border: 1px solid rgba(88,166,255,0.2);
+    }
+
+    .tag-type {
+      background: var(--tag-green);
+      color: var(--accent);
+      border: 1px solid rgba(71,207,115,0.2);
+    }
+
+    .tag-biz {
+      background: var(--tag-purple);
+      color: var(--accent5);
+      border: 1px solid rgba(198,120,221,0.2);
+    }
+
+    .tag-alert {
+      background: var(--tag-yellow);
+      color: var(--accent4);
+      border: 1px solid rgba(229,192,123,0.2);
+    }
+
+    .case-body {
+      padding: 20px 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 700px) {
+      .case-body { grid-template-columns: 1fr; }
+      .hero { padding: 28px; }
+      .hero h1 { font-size: 24px; }
+    }
+
+    .case-section-label {
+      font-size: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 8px;
+    }
+
+    .case-desc {
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.75;
+    }
+
+    .kpi-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .kpi-item {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 10px 14px;
+    }
+
+    .kpi-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--accent);
+      font-family: 'JetBrains Mono', monospace;
+      line-height: 1;
+      margin-bottom: 3px;
+    }
+
+    .kpi-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .case-footer {
+      padding: 14px 24px;
+      background: var(--surface2);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .implications-box {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .implications-label {
+      font-size: 10px;
+      color: var(--accent5);
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+
+    .implications-text {
+      font-size: 12px;
+      color: var(--text);
+    }
+
+    .source-links {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .source-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      color: var(--accent2);
+      text-decoration: none;
+      background: rgba(88,166,255,0.08);
+      border: 1px solid rgba(88,166,255,0.2);
+      padding: 4px 10px;
+      border-radius: 4px;
+      transition: background 0.15s;
+    }
+
+    .source-link:hover {
+      background: rgba(88,166,255,0.16);
+    }
+
+    .source-link svg {
+      width: 10px; height: 10px;
+      flex-shrink: 0;
+    }
+
+    /* ── IMPLICATIONS TABLE ── */
+    .implication-section {
+      margin-bottom: 40px;
+    }
+
+    .implication-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .impl-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+    }
+
+    .impl-card-icon {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .impl-card-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-hi);
+      margin-bottom: 8px;
+    }
+
+    .impl-card-body {
+      font-size: 12px;
+      color: var(--text);
+      line-height: 1.75;
+    }
+
+    /* ── CONCLUSION BLOCK ── */
+    .conclusion {
+      background: linear-gradient(135deg, #1a2e1e 0%, #1e2635 100%);
+      border: 1px solid rgba(71,207,115,0.3);
+      border-radius: 12px;
+      padding: 36px;
+    }
+
+    .conclusion h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-hi);
+      margin-bottom: 16px;
+    }
+
+    .conclusion-body {
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.85;
+      max-width: 800px;
+    }
+
+    .conclusion-body strong { color: var(--accent); }
+
+    /* ── FOOTER ── */
+    footer {
+      margin-top: 60px;
+      padding: 24px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* ── TOC ── */
+    .toc {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-bottom: 40px;
+    }
+
+    .toc-title {
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 14px;
+    }
+
+    .toc-list {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .toc-link {
+      font-size: 12px;
+      color: var(--accent2);
+      text-decoration: none;
+      background: rgba(88,166,255,0.07);
+      border: 1px solid rgba(88,166,255,0.15);
+      padding: 5px 12px;
+      border-radius: 4px;
+      transition: background 0.15s;
+    }
+
+    .toc-link:hover { background: rgba(88,166,255,0.15); }
+
+    /* ── DIVIDER ── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 36px 0;
+    }
+
+    /* accent color variants per case */
+    .case-card[data-color="green"] .case-num  { color: var(--accent); background: rgba(71,207,115,0.1); border-color: rgba(71,207,115,0.25); }
+    .case-card[data-color="blue"] .case-num   { color: var(--accent2); background: rgba(88,166,255,0.1); border-color: rgba(88,166,255,0.25); }
+    .case-card[data-color="purple"] .case-num { color: var(--accent5); background: rgba(198,120,221,0.1); border-color: rgba(198,120,221,0.25); }
+    .case-card[data-color="yellow"] .case-num { color: var(--accent4); background: rgba(229,192,123,0.1); border-color: rgba(229,192,123,0.25); }
+    .case-card[data-color="red"] .case-num    { color: var(--accent3); background: rgba(224,108,117,0.1); border-color: rgba(224,108,117,0.25); }
+
+    .case-card[data-color="blue"] .kpi-value  { color: var(--accent2); }
+    .case-card[data-color="purple"] .kpi-value { color: var(--accent5); }
+    .case-card[data-color="yellow"] .kpi-value { color: var(--accent4); }
+    .case-card[data-color="red"] .kpi-value   { color: var(--accent3); }
+
+    .case-card[data-color="blue"]:hover  { border-color: var(--accent2); }
+    .case-card[data-color="purple"]:hover { border-color: var(--accent5); }
+    .case-card[data-color="yellow"]:hover { border-color: var(--accent4); }
+    .case-card[data-color="red"]:hover   { border-color: var(--accent3); }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-logo">
+    <div class="logo-dot">🤖</div>
+    Senior Robot Research
+    <span class="header-badge">LG U+</span>
+  </div>
+  <div class="header-meta">
+    <span>📅 2025년 3월 기준</span>
+    <span>🌐 해외 사례 5건</span>
+    <span>📚 출처 검증 완료</span>
+  </div>
+</header>
+
+<div class="wrapper">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-label">// LG U+ 비즈니스 기회 탐색 리포트</div>
+    <h1>시니어 케어 로봇<br /><span>해외 사례 심층 분석</span></h1>
+    <p class="hero-sub">
+      고령화 사회의 가속화와 돌봄 인력 부족을 배경으로, 전 세계에서 시니어 케어 로봇이 실제 서비스로 확산되고 있습니다.
+      본 보고서는 신뢰도 높은 원문 출처를 기반으로 해외 대표 사례를 분석하고,
+      LG U+가 참고할 수 있는 사업화 시사점을 도출합니다.
+    </p>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-value">$2.93B</div>
+        <div class="stat-label">2024년 글로벌 시장 규모</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">14.3%</div>
+        <div class="stat-label">연평균 성장률 (CAGR, ~2033)</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">$9.85B</div>
+        <div class="stat-label">2033년 예상 시장 규모</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">5</div>
+        <div class="stat-label">분석 해외 사례 수</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TOC -->
+  <div class="toc">
+    <div class="toc-title">// 목차 (바로가기)</div>
+    <div class="toc-list">
+      <a href="#market" class="toc-link">01 시장 개요</a>
+      <a href="#case-1" class="toc-link">02 ElliQ (미국)</a>
+      <a href="#case-2" class="toc-link">03 PARO (일본)</a>
+      <a href="#case-3" class="toc-link">04 Hyodol (한국)</a>
+      <a href="#case-5" class="toc-link">05 Labrador (미국)</a>
+      <a href="#case-4" class="toc-link">06 Pepper (일본)</a>
+      <a href="#implications" class="toc-link">07 사업화 시사점</a>
+      <a href="#conclusion" class="toc-link">08 결론</a>
+    </div>
+  </div>
+
+  <!-- MARKET OVERVIEW -->
+  <section id="market">
+    <div class="section-title">01 &nbsp; 글로벌 시장 개요</div>
+    <div class="market-grid">
+      <div class="market-card">
+        <div class="market-card-icon">📈</div>
+        <div class="market-card-value">$2.93B → $9.85B</div>
+        <div class="market-card-label">글로벌 시장 (2024 → 2033)</div>
+        <div class="market-card-source">출처: <a href="https://www.grandviewresearch.com/industry-analysis/elder-care-assistive-robots-market-report" target="_blank" rel="noopener">Grand View Research</a></div>
+      </div>
+      <div class="market-card">
+        <div class="market-card-icon">🏥</div>
+        <div class="market-card-value">CAGR 14.3%</div>
+        <div class="market-card-label">시니어 케어 로봇 연평균 성장률</div>
+        <div class="market-card-source">출처: <a href="https://www.grandviewresearch.com/industry-analysis/elder-care-assistive-robots-market-report" target="_blank" rel="noopener">Grand View Research</a></div>
+      </div>
+      <div class="market-card">
+        <div class="market-card-icon">👴</div>
+        <div class="market-card-value">1.4B명</div>
+        <div class="market-card-label">2030년 전 세계 60세 이상 인구</div>
+        <div class="market-card-source">출처: <a href="https://www.who.int/news-room/fact-sheets/detail/ageing-and-health" target="_blank" rel="noopener">WHO 2025</a></div>
+      </div>
+      <div class="market-card">
+        <div class="market-card-icon">🤖</div>
+        <div class="market-card-value">CAGR 20%</div>
+        <div class="market-card-label">헬스케어 동반 로봇 성장률 (2024~2029)</div>
+        <div class="market-card-source">출처: <a href="https://meditechinsights.com/healthcare-companion-robots-market/" target="_blank" rel="noopener">Meditech Insights</a></div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- CASES -->
+  <div class="section-title">02–06 &nbsp; 해외 사례 분석</div>
+  <div class="cases-grid">
+
+    <!-- CASE 1: ElliQ -->
+    <div class="case-card" data-color="blue" id="case-1">
+      <div class="case-header">
+        <div class="case-num">CASE 01</div>
+        <div class="case-title-wrap">
+          <div class="case-title">ElliQ — AI 동반 로봇, 뉴욕주 정부와 공식 파트너십</div>
+          <div class="case-meta">
+            <span class="tag tag-country">🇺🇸 미국</span>
+            <span class="tag tag-type">AI 동반·감정 지원</span>
+            <span class="tag tag-biz">정부 조달 + 구독 모델</span>
+          </div>
+        </div>
+      </div>
+      <div class="case-body">
+        <div>
+          <div class="case-section-label">// 사례 개요</div>
+          <p class="case-desc">
+            이스라엘 스타트업 Intuition Robotics가 개발한 ElliQ는 독거 노인의 외로움을 해소하기 위한 AI 동반 로봇입니다.
+            뉴욕주 노인청(NYSOFA)은 2022년부터 800명 이상의 독거 노인을 대상으로 공식 배포 프로그램을 운영했습니다.
+            <br /><br />
+            2024년 CES에서 <strong>ElliQ 3</strong>를 발표하며 생성형 AI 기반으로 업그레이드되었고,
+            미국 내 15개 주 정부 기관과 파트너십을 체결, "수천 명"의 노인들이 사용 중입니다.
+            일본 가네마쓰(Kanematsu)와도 파트너십을 체결해 일본 시장 진출도 진행 중입니다.
+          </p>
+        </div>
+        <div>
+          <div class="case-section-label">// 핵심 성과 지표 (KPI)</div>
+          <div class="kpi-list">
+            <div class="kpi-item">
+              <div class="kpi-value">95%</div>
+              <div class="kpi-desc">외로움 감소율 (NYSOFA 파일럿 공식 보고)</div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-value">30회/일</div>
+              <div class="kpi-desc">사용자 평균 일일 상호작용 횟수</div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-value">$2.9M</div>
+              <div class="kpi-desc">뉴욕주 2023 회계연도 예산 투입액</div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-value">75%↑</div>
+              <div class="kpi-desc">건강·운동·정신 관련 상호작용 비율</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="case-footer">
+        <div class="implications-box">
+          <div class="implications-label">→ LG U+ 시사점</div>
+          <div class="implications-text">통신사의 플랫폼·네트워크 인프라를 활용한 '노인 돌봄 구독 서비스' 모델 설계 가능. 지자체·건강보험 대상 B2G 영업 전략 참고.</div>
+        </div>
+        <div class="source-links">
+          <a href="https://aging.ny.gov/news/nysofas-rollout-ai-companion-robot-elliq-shows-95-reduction-in-loneliness" target="_blank" rel="noopener" class="source-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            NYSOFA 공식 보고서
+          </a>
+          <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10917141/" target="_blank" rel="noopener" class="source-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            PMC 학술논문
+          </a>
+          <a href="https://www.fiercehealthcare.com/ai-and-machine-learning/ces-2024-older-seniors-are-happily-living-ai-form-chatty-robot-elliq" target="_blank" rel="noopener" class="source-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            FierceHealthcare CES 2024
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- CASE 2: PARO -->
+    <div class="case-card" data-color="green" id="case-2">
+      <div class="case-header">
+        <div class="case-num">CASE 02</div>
+        <div class="case-title-wrap">
+          <div class="case-title">PARO — 세계 최초 상용화 치료 로봇, 30개국 6,000+ 대 배포</div>
+          <div class="case-meta">
+            <span class="tag tag-country">🇯🇵 일본</span>
+            <span class="tag tag-type">정서적 치료·치매 케어</span>
+            <span class="tag tag-biz">B2B 요양시설 판매</span>
+          </div>
+        </div>
+      </div>
+      <div class="case-body">
+        <div>
+          <div class="case-section-label">// 사례 개요</div>
+          <p class="case-desc">
+            일본 산업기술총합연구소(AIST)가 개발한 물개형 치료 로봇 PARO는
+            세계에서 가장 널리 상용 배포된 시니어 케어 로봇입니다.
+            일본 내 3,000대를 포함해 30개국 6,000대 이상이 요양원·병원에서 운용 중입니다.
+            <br /><br />
+            스탠퍼드대 FSI 연구(2021~2024)에 따르면 PARO 등 케어 로봇 도입 요양시설은
+            비도입 시설 대비 직원 수가 3~8% 더 많았으며, 욕창·신체 억제 감소 등
+            돌봄 품질 향상이 확인되었습니다.
+          </p>
+        </div>
+        <div>
+          <div class="case-section-label">// 핵심 성과 지표 (KPI)</div>
+          <div class="kpi-list">
+            <div class="kpi-item">
+              <div class="kpi-value">6,000+</div>
+              <div class="kpi-desc">전 세계 누적 배포 대수 (30개국)</div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-value">3~8%</div>
+              <div class="kpi-desc">케어 로봇 도입 시설의 직원 수 증가 (Stanford FSI)</div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-value">진정율 ↑</div>
+              <div class="kpi-desc">치매 환자 약물 없이 흥분 완화 효과 다수 임상 확인</div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-value">2012</div>
+              <div class="kpi-desc">기네스 세계기록: 가장 치료적인 로봇 인정</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="case-footer">
+        <div class="implications-box">
+          <div class="implications-label">→ LG U+ 시사점</div>
+          <div class="implications-text">치료 효과 기반의 '의료기기' 포지셔닝 전략 가능. IoT·5G 연결 기능을 더한 'PARO+통신' 패키지로 요양원 B2B 확장 모델 참고.</div>
+        </div>
+        <div class="source-links">
+          <a href="https://aparc.fsi.stanford.edu/research/impact-robots-nursing-home-care-japan" target="_blank" rel="noopener" class="source-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Stanford FSI 연구
+          </a>
+          <a href="https://www.technologyreview.com/2023/01/09/1065135/japan-automating-eldercare-robots/" target="_blank" rel="noopener" class="source-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            MIT Technology Review
+          </a>
+          <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8287345/" target="_blank" rel="noopener" class="source-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            PMC 임상 연구
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- CASE 3: Hyodol -->
+    <div class="case-card" data-color="purple" id="case-3">
+      <div class="case-header">
+        <div class="case-num">CASE 03</div>
+        <div class="case-title-wrap">
+          <div class="case-title">Hyodol — AI 돌봄 인형 로봇, 한국 정부 주도 1만 2,000대 배포</div>
+          <div class="case-meta">
+            <span class="tag tag-country">🇰🇷 한국</span>
+            <span class="tag tag-type">AI 안전 모니터링·대화</span>
+            <span class="tag tag-biz">정부 지원 복지 조달</span>
+            <span class="tag tag-alert">국내 직접 참고 사례</span>
+          </div>
+        </div>
+      </div>
+      <div class="case-body">
+        <div>
+          <div class="case-section-label">// 사례 개요</div>
+          <p class="case-desc">
+            Hyodol(효돌)은 국내 스타트업 Evotion이 개발한 AI 인형 로봇입니다.
+            복지부·국민건강보험공단 주도로 독거 노인에게 배포되며,
+            2025년 기준 <strong>12,000대 이상</strong>이 전국 독거 노인 가정에 배치되었습니다.
+            <br /><br />
+            ChatGPT 기반 챗봇으로 말벗 기능을 제공하고,
+            복약·식사 알림, 응급상황 시 사회복지사·가족 알림 등 기능을 탑재합니다.
+            69명 대상 임상 연구에서 6주 사용 후 우울감 감소·인지 점수 개선이 확인되었습니다.
+            2025년 미국 시장 진출도 추진 중입니다.
+          </p>
+        </div>
+        <div>
+          <div class="case-section-label">// 핵심 성과 지표 (KPI)</div>
+          <div class="kpi-list">
+            <div class="kpi-item">
+              <div class="kpi-value">12,000+</div>
+              <div class="kpi-desc">국내 독거 노인 가정 배포 대수 (2025년 기준)</div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-value">임상 효과</div>
+              <div class="kpi-desc">6주 사용 후 우울감 감소·인지 점수 개선 (69명 연구)</div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-value">요양원 입소 지연</div>
+              <div class="kpi-desc">경도 인지장애 사용자의 시설 입소 지연 효과 확인</div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-value">200M원</div>
+              <div class="kpi-desc">2019년 정부 최초 배포 예산 투입</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="case-footer">
+        <div class="implications-box">
+          <div class="implications-label">→ LG U+ 시사점</div>
+          <div class="implications-text">LG U+의 IoT 플랫폼(U+스마트홈)과 결합해 '통신+AI돌봄' 구독 번들 설계 가능. 건강보험공단·지자체 조달 입찰 구조 동일 적용 가능.</div>
+        </div>
+        <div class="source-links">
+          <a href="https://restofworld.org/2025/korea-ai-robot-senior-care-hyodol/" target="_blank" rel="noopener" class="source-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Rest of World
+          </a>
+          <a href="https://www.cnn.com/health/asias-aging-population-finds-comfort-care-in-robo-grandma-dolls-wellness-spc" target="_blank" rel="noopener" class="source-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            CNN Health
+          </a>
+          <a href="https://www.ajupress.com/view/20240930154020160" target="_blank" rel="noopener" class="source-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            아주프레스 (국가사업 선정)
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- CASE 4: Labrador Systems -->
+    <div class="case-card" data-color="yellow" id="case-5">
+      <div class="case-header">
+        <div class="case-num">CASE 04</div>
+        <div class="case-title-wrap">
+          <div class="case-title">Labrador Retriever — 자율 이동형 홈 케어 로봇, Amazon·AARP 파트너십</div>
+          <div class="case-meta">
+            <span class="tag tag-country">🇺🇸 미국</span>
+            <span class="tag tag-type">이동·물건 운반 지원</span>
+            <span class="tag tag-biz">요양시설 B2B + 가정 구독</span>
+          </div>
+        </div>
+      </div>
+      <div class="case-body">
+        <div>
+          <div class="case-section-label">// 사례 개요</div>
+          <p class="case-desc">
+            미국 Labrador Systems의 Retriever Pro는 이동이 불편한 노인·장애인을
+            위해 물건을 자율적으로 가져다주는 반자율 이동형 로봇입니다.
+            <br /><br />
+            2022년 말부터 <strong>On Lok PACE, Masonic Homes of California,
+            Presbyterian Villages of Michigan</strong> 등 복수의 요양시설에 최초 상용 배포를 시작했고,
+            Amazon·AARP와 CES 2023 파트너십을 통해 가정용 시장 진출을 가속화했습니다.
+            낙상 방지와 독립적 생활 연장이 핵심 가치 제안입니다.
+          </p>
+        </div>
+        <div>
+          <div class="case-section-label">// 핵심 성과 지표 (KPI)</div>
+          <div class="kpi-list">
+            <div class="kpi-item">
+              <div class="kpi-value">10+</div>
+              <div class="kpi-desc">미국 내 초기 상용 고객 요양기관 수</div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-value">Amazon 파트너</div>
+              <div class="kpi-desc">CES 2023 Amazon·AARP와 공동 쇼케이스</div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-value">낙상 방지</div>
+              <div class="kpi-desc">물건 운반 지원으로 이동 중 낙상 위험 감소</div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-value">Nationwide Ins.</div>
+              <div class="kpi-desc">미국 보험사와 리스크 감소 연계 협업</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="case-footer">
+        <div class="implications-box">
+          <div class="implications-label">→ LG U+ 시사점</div>
+          <div class="implications-text">보험사 연계 '낙상 리스크 감소 보험 연동' 모델 설계 가능. LG 로봇(CLOi) 하드웨어와 U+ 네트워크 결합 시 유사 포지셔닝 실현 가능.</div>
+        </div>
+        <div class="source-links">
+          <a href="https://techcrunch.com/2022/11/03/labrador-systems-deploys-its-first-assistive-eldercare-robots/" target="_blank" rel="noopener" class="source-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            TechCrunch
+          </a>
+          <a href="https://www.robotics247.com/article/labrador_systems_teams_up_with_amazon_aarp_to_showcase_elder_care_robot_at_ces_2023" target="_blank" rel="noopener" class="source-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Robotics 24/7 (CES 2023)
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- CASE 5: Pepper Japan -->
+    <div class="case-card" data-color="red" id="case-4">
+      <div class="case-header">
+        <div class="case-num">CASE 05</div>
+        <div class="case-title-wrap">
+          <div class="case-title">Pepper (SoftBank) — 일본 요양원 500곳 배포, 운영 모델과 한계 교훈</div>
+          <div class="case-meta">
+            <span class="tag tag-country">🇯🇵 일본</span>
+            <span class="tag tag-type">소셜·엔터테인먼트 로봇</span>
+            <span class="tag tag-biz">B2B 임대 + 콘텐츠 구독</span>
+            <span class="tag tag-alert">실패 교훈 포함</span>
+          </div>
+        </div>
+      </div>
+      <div class="case-body">
+        <div>
+          <div class="case-section-label">// 사례 개요</div>
+          <p class="case-desc">
+            SoftBank의 Pepper 로봇은 일본 요양원 약 <strong>500곳</strong>에 배포되어
+            게임·체조·루틴 관리 등을 수행했습니다.
+            <br /><br />
+            그러나 실제 현장에서는 유지보수 부담, 방문자 인식 실패 등 한계가 명확하게 드러났습니다.
+            Hug(리프팅 로봇)는 운용 번거로움으로 며칠 만에 중단되었고,
+            일부 로봇은 추가 업무를 만들어낸다는 직원 불만도 발생했습니다.
+            이 사례는 <strong>도입 편의성·유지보수 설계</strong>의 중요성을 반면교사로 제시합니다.
+          </p>
+        </div>
+        <div>
+          <div class="case-section-label">// 핵심 성과 지표 (KPI)</div>
+          <div class="kpi-list">
+            <div class="kpi-item">
+              <div class="kpi-value">500곳</div>
+              <div class="kpi-desc">일본 요양원 Pepper 배포 시설 수</div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-value">콘텐츠 구독</div>
+              <div class="kpi-desc">체조·게임 콘텐츠 구독 부가 수익 모델 시도</div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-value">⚠ 운용 부담</div>
+              <div class="kpi-desc">이동·충전·재부팅·설명 등 직원 추가 업무 발생</div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-value">⚠ 인식 한계</div>
+              <div class="kpi-desc">치매 환자 반복 인식 실패, 직원 신뢰 저하</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="case-footer">
+        <div class="implications-box">
+          <div class="implications-label">→ LG U+ 시사점 (반면교사)</div>
+          <div class="implications-text">로봇 도입 시 '현장 직원 운용 부담 최소화' 필수. 원격 모니터링·자동 업데이트 등 통신사 강점으로 차별화 가능. 단순하고 신뢰할 수 있는 UX 설계가 핵심.</div>
+        </div>
+        <div class="source-links">
+          <a href="https://www.technologyreview.com/2023/01/09/1065135/japan-automating-eldercare-robots/" target="_blank" rel="noopener" class="source-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            MIT Technology Review
+          </a>
+          <a href="https://fsi.stanford.edu/news/robot-adoption-brings-benefits-japan%E2%80%99s-aging-society" target="_blank" rel="noopener" class="source-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Stanford FSI
+          </a>
+          <a href="https://japanupclose.web-japan.org/techculture/t20240531_6.html" target="_blank" rel="noopener" class="source-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Japan Up Close
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /cases-grid -->
+
+  <hr class="divider" />
+
+  <!-- IMPLICATIONS -->
+  <section id="implications" class="implication-section">
+    <div class="section-title">07 &nbsp; LG U+ 비즈니스 시사점 종합</div>
+    <div class="implication-grid">
+      <div class="impl-card">
+        <div class="impl-card-icon">📡</div>
+        <div class="impl-card-title">통신 인프라 차별화</div>
+        <div class="impl-card-body">
+          ElliQ·Hyodol 사례가 보여주듯 원격 모니터링·실시간 알림이 핵심 가치입니다.
+          LG U+의 5G·IoT 인프라는 경쟁사 대비 강력한 기술 기반으로, 로봇 제조사와의 파트너십 시 '연결성 제공자' 포지셔닝이 유효합니다.
+        </div>
+      </div>
+      <div class="impl-card">
+        <div class="impl-card-icon">🏛️</div>
+        <div class="impl-card-title">정부·공공 조달 공략</div>
+        <div class="impl-card-body">
+          NYSOFA(미국), 복지부(한국) 모두 정부 예산으로 대규모 배포를 추진했습니다.
+          LG U+는 공공 입찰 역량과 기존 정부 고객 네트워크를 활용해 B2G 수주 우위를 확보할 수 있습니다.
+        </div>
+      </div>
+      <div class="impl-card">
+        <div class="impl-card-icon">💳</div>
+        <div class="impl-card-title">구독 번들 수익 모델</div>
+        <div class="impl-card-body">
+          해외 성공 사례들은 모두 하드웨어 판매보다 <strong>서비스 구독</strong> 모델로 수익화합니다.
+          LG U+ 통신 요금제에 '노인 돌봄 AI 로봇 월정액' 번들을 추가하는 방식이
+          기존 가입자 기반을 활용할 수 있는 최적 진입 전략입니다.
+        </div>
+      </div>
+      <div class="impl-card">
+        <div class="impl-card-icon">🤝</div>
+        <div class="impl-card-title">하드웨어 파트너십 전략</div>
+        <div class="impl-card-body">
+          LG전자가 CLOi·CLOiD 로봇 사업을 확대 중입니다.
+          LG U+는 LG전자와의 계열사 협력으로 하드웨어 개발 비용 없이
+          플랫폼·네트워크·서비스 레이어에 집중하는 <strong>애플-AT&T 방식</strong>을 참고할 수 있습니다.
+        </div>
+      </div>
+      <div class="impl-card">
+        <div class="impl-card-icon">⚠️</div>
+        <div class="impl-card-title">운용 편의성 설계 필수</div>
+        <div class="impl-card-body">
+          Pepper 사례는 복잡한 운용이 현장 거부감을 유발한다는 것을 보여줍니다.
+          원격 자동 업데이트, 최소 개입 유지보수, 단순한 UX를 서비스 설계 초기부터 내재화해야 합니다.
+        </div>
+      </div>
+      <div class="impl-card">
+        <div class="impl-card-icon">🏥</div>
+        <div class="impl-card-title">보험·의료 연계 생태계</div>
+        <div class="impl-card-body">
+          Labrador-Nationwide Insurance 협업처럼, 낙상 방지·응급 대응으로
+          보험료 절감 효과를 정량화하면 보험사를 새 유통·재원 파트너로 연결할 수 있습니다.
+          국민건강보험공단과의 연계도 국내에서 실현 가능한 경로입니다.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- CONCLUSION -->
+  <section id="conclusion">
+    <div class="section-title">08 &nbsp; 결론 및 권고</div>
+    <div class="conclusion">
+      <h3>LG U+의 시니어 케어 로봇 사업 진입을 위한 핵심 권고</h3>
+      <p class="conclusion-body">
+        해외 사례 분석 결과, 시니어 케어 로봇이 가장 성공적으로 확산된 공통 조건은
+        <strong>(1) 정부·공공기관의 재정 지원</strong>,
+        <strong>(2) 측정 가능한 임상·복지 효과 데이터</strong>,
+        <strong>(3) 통신·플랫폼과의 결합</strong>으로 요약됩니다.
+        <br /><br />
+        LG U+는 통신사로서의 강점(네트워크, 고객 기반, IoT 플랫폼, 정부 납품 경험)을 보유하고 있어
+        하드웨어를 직접 개발하기보다 <strong>Hyodol·ElliQ 같은 전문 로봇 제조사와 B2B 파트너십을 체결하고,
+        연결·모니터링·구독 서비스 레이어를 담당하는 전략</strong>이 가장 현실적이고 빠른 시장 진입 경로입니다.
+        <br /><br />
+        단기 권고: 복지부·지자체 대상 Hyodol 또는 유사 제품과 '통신+돌봄' 번들 시범 사업 추진 →
+        6개월 파일럿 후 데이터 기반 확장 여부 결정. Stanford FSI 연구가 보여주듯,
+        로봇 도입은 인력을 대체하는 것이 아니라 <strong>돌봄 품질을 높이고 인력을 더 확보하게 하는 보완재</strong>임을
+        공공 커뮤니케이션의 핵심 메시지로 활용해야 합니다.
+      </p>
+    </div>
+  </section>
+
+</div><!-- /wrapper -->
+
+<footer>
+  <div style="margin-bottom:8px; color: #47cf73;">// Senior Care Robot Research Report</div>
+  <div>LG U+ 비즈니스 기회 탐색 | 2026년 3월 기준 | 출처: Grand View Research · Stanford FSI · NYSOFA · MIT Technology Review · Rest of World · CNN Health · TechCrunch</div>
+  <div style="margin-top:8px; color: #3a3d52;">모든 링크는 원문으로 연결됩니다. 시장 데이터는 각 조사기관의 최신 보고서 기준입니다.</div>
+</footer>
+
+</body>
+</html>
