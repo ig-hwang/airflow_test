@@ -511,6 +511,106 @@
 
     .conclusion-body strong { color: var(--accent); }
 
+    /* ── NEWS FEED ── */
+    .nf-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .nf-tab {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 6px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .nf-tab:hover { color: var(--text-hi); border-color: var(--accent2); }
+    .nf-tab.active { background: rgba(88,166,255,0.12); border-color: var(--accent2); color: var(--accent2); }
+
+    .nf-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 14px;
+    }
+
+    .nf-card {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      text-decoration: none;
+      transition: border-color 0.2s, transform 0.15s;
+    }
+
+    .nf-card:hover {
+      border-color: var(--accent2);
+      transform: translateY(-2px);
+    }
+
+    .nf-card[data-cat="tech"]:hover    { border-color: var(--accent); }
+    .nf-card[data-cat="policy"]:hover  { border-color: var(--accent5); }
+    .nf-card[data-cat="market"]:hover  { border-color: var(--accent4); }
+    .nf-card[data-cat="telecom"]:hover { border-color: var(--accent2); }
+
+    .nf-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nf-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 3px;
+      letter-spacing: 0.4px;
+    }
+
+    .badge-tech    { background: var(--tag-green);  color: var(--accent);  border: 1px solid rgba(71,207,115,0.25); }
+    .badge-policy  { background: var(--tag-purple); color: var(--accent5); border: 1px solid rgba(198,120,221,0.25); }
+    .badge-market  { background: var(--tag-yellow); color: var(--accent4); border: 1px solid rgba(229,192,123,0.25); }
+    .badge-telecom { background: var(--tag-blue);   color: var(--accent2); border: 1px solid rgba(88,166,255,0.25); }
+
+    .nf-date {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .nf-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-hi);
+      line-height: 1.45;
+    }
+
+    .nf-desc {
+      font-size: 11px;
+      color: var(--text);
+      line-height: 1.7;
+      flex: 1;
+    }
+
+    .nf-source {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+      padding-top: 6px;
+      border-top: 1px solid var(--border);
+    }
+
+    .nf-card.hidden { display: none; }
+
     /* ── FOOTER ── */
     footer {
       margin-top: 60px;
@@ -643,6 +743,7 @@
       <a href="#case-4" class="toc-link">06 Pepper (일본)</a>
       <a href="#implications" class="toc-link">07 사업화 시사점</a>
       <a href="#conclusion" class="toc-link">08 결론</a>
+      <a href="#newsfeed" class="toc-link">09 뉴스피드</a>
     </div>
   </div>
 
@@ -1118,6 +1219,242 @@
     </div>
   </section>
 
+  <hr class="divider" />
+
+  <!-- NEWS FEED -->
+  <section id="newsfeed">
+    <div class="section-title">09 &nbsp; 참고 뉴스피드 — 최신 동향 모음</div>
+    <p style="font-size:12px; color:var(--text-muted); margin-bottom:20px; font-family:'JetBrains Mono',monospace;">
+      // 해외 사례 외 참고할 최신 기사·연구·정책 자료. 클릭 시 원문으로 이동합니다.
+    </p>
+
+    <!-- 탭 필터 -->
+    <div class="nf-tabs" id="nfTabs">
+      <button class="nf-tab active" data-cat="all">전체</button>
+      <button class="nf-tab" data-cat="tech">기술·연구</button>
+      <button class="nf-tab" data-cat="policy">정책·규제</button>
+      <button class="nf-tab" data-cat="market">시장·투자</button>
+      <button class="nf-tab" data-cat="telecom">통신·플랫폼</button>
+    </div>
+
+    <div class="nf-grid" id="nfGrid">
+
+      <!-- ── 기술·연구 ── -->
+      <a href="https://news.mit.edu/2025/eldercare-robot-helps-people-sit-stand-catches-them-fall-0513"
+         target="_blank" rel="noopener" class="nf-card" data-cat="tech">
+        <div class="nf-card-top">
+          <span class="nf-badge badge-tech">기술·연구</span>
+          <span class="nf-date">2025.05</span>
+        </div>
+        <div class="nf-title">MIT, 낙상 방지 로봇 E-BAR 발표 — 250ms 내 에어백 전개로 낙상 즉시 대응</div>
+        <div class="nf-desc">MIT 기계공학과가 ICRA 2025에서 발표한 E-BAR는 시니어를 뒤따라다니며 앉고 서는 동작을 보조하고, 낙상 감지 시 0.25초 내에 에어백을 팽창시켜 신체를 받쳐준다. 낙상은 65세 이상 부상 원인 1위.</div>
+        <div class="nf-source">MIT News</div>
+      </a>
+
+      <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10474924/"
+         target="_blank" rel="noopener" class="nf-card" data-cat="tech">
+        <div class="nf-card-top">
+          <span class="nf-badge badge-tech">기술·연구</span>
+          <span class="nf-date">2023</span>
+        </div>
+        <div class="nf-title">PMC 학술 리뷰: AI·로봇의 고령자 헬스케어 적용 — 독립생활·삶의 질 향상</div>
+        <div class="nf-desc">동반 로봇, 모니터링 시스템, 재활 보조 등 노인 케어 영역별 AI·로봇 기술의 임상적 효과를 체계적으로 검토한 PubMed Central 수록 리뷰 논문. 이중 맹검 임상 데이터 포함.</div>
+        <div class="nf-source">PMC / PubMed Central</div>
+      </a>
+
+      <a href="https://case.edu/news/ai-driven-robotics-research-aims-enhance-care-older-adults-alzheimers"
+         target="_blank" rel="noopener" class="nf-card" data-cat="tech">
+        <div class="nf-card-top">
+          <span class="nf-badge badge-tech">기술·연구</span>
+          <span class="nf-date">2024</span>
+        </div>
+        <div class="nf-title">케이스 웨스턴 리저브대, AI 로보틱스로 알츠하이머 환자 케어 강화 연구 착수</div>
+        <div class="nf-desc">NaviGait의 Ruyi 로봇을 Judson Senior Living에서 테스트. AI 기반 보행 모니터링·인터랙션으로 인지 저하 노인을 지원하는 파일럿 연구.</div>
+        <div class="nf-source">Case Western Reserve University Newsroom</div>
+      </a>
+
+      <a href="https://www.npr.org/2025/06/04/nx-s1-5319315/denver-researchers-say-robot-companions-can-improve-senior-citizens-quality-of-life"
+         target="_blank" rel="noopener" class="nf-card" data-cat="tech">
+        <div class="nf-card-top">
+          <span class="nf-badge badge-tech">기술·연구</span>
+          <span class="nf-date">2025.06</span>
+        </div>
+        <div class="nf-title">NPR: 덴버 연구팀, 로봇 동반자가 노인 삶의 질 향상에 효과적임을 확인</div>
+        <div class="nf-desc">덴버대 연구팀의 Ryan 로봇은 사람의 감정에 반응하는 AI를 탑재. 노인 대상 파일럿에서 삶의 질·정신 건강 지표 개선 확인. NPR 보도.</div>
+        <div class="nf-source">NPR</div>
+      </a>
+
+      <!-- ── 정책·규제 ── -->
+      <a href="https://english.www.gov.cn/policies/latestreleases/202501/07/content_WS677d340ac6d0868f4e8ee95d.html"
+         target="_blank" rel="noopener" class="nf-card" data-cat="policy">
+        <div class="nf-card-top">
+          <span class="nf-badge badge-policy">정책·규제</span>
+          <span class="nf-date">2025.01</span>
+        </div>
+        <div class="nf-title">중국 정부, 노인 케어에 휴머노이드 로봇 도입 촉진 공식 발표</div>
+        <div class="nf-desc">중국 국무원 공식 발표. 고령화 대응을 위해 노인 케어 분야에 휴머노이드 로봇 사용 장려 정책 시행. 아시아 최대 시장의 정책 방향 제시.</div>
+        <div class="nf-source">中国政府网 (China.gov.cn) 공식 영문 채널</div>
+      </a>
+
+      <a href="https://www.scmp.com/tech/policy/article/3313739/china-turns-robots-elderly-care-national-pilot-programme"
+         target="_blank" rel="noopener" class="nf-card" data-cat="policy">
+        <div class="nf-card-top">
+          <span class="nf-badge badge-policy">정책·규제</span>
+          <span class="nf-date">2025.06</span>
+        </div>
+        <div class="nf-title">SCMP: 중국, 국가 파일럿 프로그램으로 가정·시설 200개소에 로봇 배포 의무화</div>
+        <div class="nf-desc">공업부·민정부 합동 2025~2027 파일럿. 가정 기반 200가구 200대, 시설 기반 20개소 20대 이상 배포 의무. 6개월 이상 실증 후 확산 결정.</div>
+        <div class="nf-source">South China Morning Post</div>
+      </a>
+
+      <a href="https://english.seoul.go.kr/elderly-care-becomes-smart-in-seoul-by-using-robots-and-ai-technology-to-keep-seniors-healthy-and-safe/"
+         target="_blank" rel="noopener" class="nf-card" data-cat="policy">
+        <div class="nf-card-top">
+          <span class="nf-badge badge-policy">정책·규제</span>
+          <span class="nf-date">2024.03</span>
+        </div>
+        <div class="nf-title">서울시, AI·로봇 기반 스마트 노인 돌봄 서비스 공식 추진 발표</div>
+        <div class="nf-desc">서울시가 수동 노동 중심 노인 돌봄에 AI·로봇·IoT를 본격 도입. 스마트 복지관·AI 동반 로봇견·재활 로봇 적용 계획 발표. 서울시 공식 영문 보도자료.</div>
+        <div class="nf-source">서울특별시 공식 영문 사이트</div>
+      </a>
+
+      <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10815750/"
+         target="_blank" rel="noopener" class="nf-card" data-cat="policy">
+        <div class="nf-card-top">
+          <span class="nf-badge badge-policy">정책·규제</span>
+          <span class="nf-date">2024</span>
+        </div>
+        <div class="nf-title">PMC 리뷰: 한국 정부 AI-IoT 기반 지역사회 노인 헬스케어 서비스 현황 및 전망</div>
+        <div class="nf-desc">복지부·건강증진원 주도 AI-IoT 헬스케어 프로젝트 분석. 스마트 스피커·AI 돌봄 통합 서비스의 정책 성과와 한계를 학술적으로 정리한 PMC 수록 리뷰.</div>
+        <div class="nf-source">PMC / PubMed Central (한국 정책 연구)</div>
+      </a>
+
+      <a href="https://www.zemplee.com/2025/05/05/ai-robots-elderly-care-2025-challenges-ethical-questions/"
+         target="_blank" rel="noopener" class="nf-card" data-cat="policy">
+        <div class="nf-card-top">
+          <span class="nf-badge badge-policy">정책·규제</span>
+          <span class="nf-date">2025.05</span>
+        </div>
+        <div class="nf-title">2025년 노인 케어 AI 로봇의 과제와 윤리 쟁점 — 데이터 동의·감시 우려</div>
+        <div class="nf-desc">2025년 기업들이 '지속적·맥락 인식 동의' 방식으로 전환 중. 감정 인식 소프트웨어의 윤리 설계, 헬스 데이터 활용·저장 규제 강화 흐름 분석. LG U+ 개인정보 전략에 직접 참고 가능.</div>
+        <div class="nf-source">Zemplee</div>
+      </a>
+
+      <!-- ── 시장·투자 ── -->
+      <a href="https://eldercareoutlook.com/eldercare-robots-rise-global-market-set-to-more-than-double-by-2031/"
+         target="_blank" rel="noopener" class="nf-card" data-cat="market">
+        <div class="nf-card-top">
+          <span class="nf-badge badge-market">시장·투자</span>
+          <span class="nf-date">2024</span>
+        </div>
+        <div class="nf-title">Eldercare Outlook: 노인 케어 로봇 시장 2031년까지 2배 이상 성장 전망</div>
+        <div class="nf-desc">고령화 인구 증가, 돌봄 인력 부족, 투자 확대가 핵심 성장 동인. 시장 세분화(동반형·신체 지원형·감시형)별 성장률과 지역별 분포 분석.</div>
+        <div class="nf-source">Eldercare Outlook</div>
+      </a>
+
+      <a href="https://info.seniorlivinginnovationforum.com/blog/why-money-is-finally-flowing-into-senior-care-tech"
+         target="_blank" rel="noopener" class="nf-card" data-cat="market">
+        <div class="nf-card-top">
+          <span class="nf-badge badge-market">시장·투자</span>
+          <span class="nf-date">2024</span>
+        </div>
+        <div class="nf-title">왜 지금 시니어 케어 테크에 돈이 몰리는가 — 장수 경제 $9조 기회</div>
+        <div class="nf-desc">장수 경제(Longevity Economy)는 $9조 시장임에도 VC 투자 비중은 2% 미만. AgeTech 전문 VC·기업 벤처 부문 진입 가속 배경과 투자 패턴 분석.</div>
+        <div class="nf-source">Senior Living Innovation Forum</div>
+      </a>
+
+      <a href="https://www.rgare.com/knowledge-center/article/robotics-and-eldercare-s-future"
+         target="_blank" rel="noopener" class="nf-card" data-cat="market">
+        <div class="nf-card-top">
+          <span class="nf-badge badge-market">시장·투자</span>
+          <span class="nf-date">2024</span>
+        </div>
+        <div class="nf-title">RGA 재보험: 로봇공학과 노인 케어의 미래 — 보험사 관점의 리스크·기회 분석</div>
+        <div class="nf-desc">글로벌 재보험사 RGA가 분석한 케어 로봇 도입에 따른 보험 리스크 변화. 낙상 감소·모니터링 연계 보험료 인하 모델 등 보험-로봇 연계 사업 기회 제시.</div>
+        <div class="nf-source">RGA Reinsurance</div>
+      </a>
+
+      <a href="https://news.crunchbase.com/robotics/startup-funding-rises-h1-2025-ai-apptronik-data/"
+         target="_blank" rel="noopener" class="nf-card" data-cat="market">
+        <div class="nf-card-top">
+          <span class="nf-badge badge-market">시장·투자</span>
+          <span class="nf-date">2025</span>
+        </div>
+        <div class="nf-title">Crunchbase: 2025년 상반기 로보틱스 스타트업 펀딩 $60억 돌파 — 헬스케어가 차기 주력</div>
+        <div class="nf-desc">2025년 상반기 글로벌 로보틱스 스타트업 투자 규모가 이미 2024년 연간에 근접. 창고 자동화 이후 헬스케어·노인 케어가 다음 집중 투자 영역으로 부상 중.</div>
+        <div class="nf-source">Crunchbase News</div>
+      </a>
+
+      <a href="https://www.cfr.org/blog/chinas-industrial-policy-drives-boom-eldercare-robots"
+         target="_blank" rel="noopener" class="nf-card" data-cat="market">
+        <div class="nf-card-top">
+          <span class="nf-badge badge-market">시장·투자</span>
+          <span class="nf-date">2025</span>
+        </div>
+        <div class="nf-title">CFR: 중국 산업 정책이 이끄는 노인 케어 로봇 붐 — 국가 주도 시장 창출 전략</div>
+        <div class="nf-desc">미국외교협회(CFR)가 분석한 중국의 노인 케어 로봇 산업 정책. 정부 보조금·의무 배포·표준화를 통한 시장 창출 모델이 한국 정책에 주는 시사점.</div>
+        <div class="nf-source">Council on Foreign Relations (CFR)</div>
+      </a>
+
+      <!-- ── 통신·플랫폼 ── -->
+      <a href="https://stlpartners.com/articles/digital-health/four-strategies-for-telcos-in-healthcare/"
+         target="_blank" rel="noopener" class="nf-card" data-cat="telecom">
+        <div class="nf-card-top">
+          <span class="nf-badge badge-telecom">통신·플랫폼</span>
+          <span class="nf-date">2024</span>
+        </div>
+        <div class="nf-title">STL Partners: 통신사가 헬스케어에서 취할 수 있는 4가지 전략 프레임워크</div>
+        <div class="nf-desc">글로벌 통신 컨설팅 STL Partners가 제시하는 텔코 헬스케어 전략: ① 연결성 제공자 ② 플랫폼 운영자 ③ 서비스 번들러 ④ 직접 헬스케어 제공자. LG U+ 포지셔닝 전략 수립에 직결.</div>
+        <div class="nf-source">STL Partners</div>
+      </a>
+
+      <a href="https://www.cbinsights.com/research/5g-telecommunication-healthcare-startups-investment-partnerships/"
+         target="_blank" rel="noopener" class="nf-card" data-cat="telecom">
+        <div class="nf-card-top">
+          <span class="nf-badge badge-telecom">통신·플랫폼</span>
+          <span class="nf-date">2024</span>
+        </div>
+        <div class="nf-title">CB Insights: 통신사가 5G로 헬스케어 시장 공략하는 방법 — 스타트업 파트너십 전략</div>
+        <div class="nf-desc">Verizon·AT&T·Deutsche Telekom 등 주요 통신사가 5G 기반 헬스케어에 진입하는 방식 분석. 원격 모니터링·로봇 수술 지원 등 유즈케이스와 투자·파트너십 현황.</div>
+        <div class="nf-source">CB Insights</div>
+      </a>
+
+      <a href="https://www.therobotreport.com/ces-2026-lg-to-debut-new-cloid-humanoid-robot-for-the-home/"
+         target="_blank" rel="noopener" class="nf-card" data-cat="telecom">
+        <div class="nf-card-top">
+          <span class="nf-badge badge-telecom">통신·플랫폼</span>
+          <span class="nf-date">2026.01</span>
+        </div>
+        <div class="nf-title">The Robot Report: LG, CES 2026에서 가정용 휴머노이드 CLOiD 첫 공개</div>
+        <div class="nf-desc">LG전자의 CLOiD는 7자유도 듀얼 암·5지 손 장착 가정용 휴머노이드. 요리·세탁 등 가사 지원 시연. LG U+와의 계열사 시너지 및 노인 케어 연계 가능성 직접 참고 자료.</div>
+        <div class="nf-source">The Robot Report</div>
+      </a>
+
+      <a href="https://stlpartners.com/articles/digital-health/10-telco-healthcare-services/"
+         target="_blank" rel="noopener" class="nf-card" data-cat="telecom">
+        <div class="nf-card-top">
+          <span class="nf-badge badge-telecom">통신·플랫폼</span>
+          <span class="nf-date">2024</span>
+        </div>
+        <div class="nf-title">STL Partners: 통신사가 출시할 수 있는 헬스케어 서비스 10가지</div>
+        <div class="nf-desc">원격 진료·낙상 감지·만성질환 관리·정신 건강 앱 등 텔코가 실제 론칭한 10개 헬스케어 서비스 사례. Movistar 월 구독 모델(€7~11) 포함. LG U+ 상품 기획 레퍼런스.</div>
+        <div class="nf-source">STL Partners</div>
+      </a>
+
+      <a href="https://www.ergo.com/en/radar-magazine/digitalisation-and-technology/2025/ai-artificial-intelligence-humanoide-robots-elderly-nursing-care"
+         target="_blank" rel="noopener" class="nf-card" data-cat="telecom">
+        <div class="nf-card-top">
+          <span class="nf-badge badge-telecom">통신·플랫폼</span>
+          <span class="nf-date">2025</span>
+        </div>
+        <div class="nf-title">ERGO (보험그룹): AI·휴머노이드 로봇이 노인 요양에서 점점 더 중요해지는 이유</div>
+        <div class="nf-desc">독일 ERGO 보험그룹 관점에서 분석한 AI·로봇의 노인 케어 적용 현황. 보험사가 케어 로봇 도입에 적극적인 이유(클레임 감소·삶의 질 향상)와 협업 모델 제시.</div>
+        <div class="nf-source">ERGO Radar Magazine</div>
+      </a>
+
+    </div><!-- /nf-grid -->
+  </section>
+
 </div><!-- /wrapper -->
 
 <footer>
@@ -1126,5 +1463,25 @@
   <div style="margin-top:8px; color: #3a3d52;">모든 링크는 원문으로 연결됩니다. 시장 데이터는 각 조사기관의 최신 보고서 기준입니다.</div>
 </footer>
 
+<script>
+  // Tab filter for news feed
+  const tabs = document.querySelectorAll('.nf-tab');
+  const cards = document.querySelectorAll('.nf-card');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const cat = tab.dataset.cat;
+      cards.forEach(card => {
+        if (cat === 'all' || card.dataset.cat === cat) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    });
+  });
+</script>
 </body>
 </html>
