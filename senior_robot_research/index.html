@@ -780,6 +780,18 @@
 
     .toc-link:hover { background: rgba(88,166,255,0.15); }
 
+    .toc-sub-link {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-decoration: none;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 4px;
+      transition: background 0.15s;
+    }
+    .toc-sub-link:hover { background: rgba(88,166,255,0.08); color: var(--accent2); }
+
     /* ── DIVIDER ── */
     .divider {
       border: none;
@@ -853,17 +865,18 @@
     <div class="toc-title">// 목차 (바로가기)</div>
     <div class="toc-list">
       <a href="#market" class="toc-link">01 시장 개요</a>
-      <a href="#case-1" class="toc-link">02 ElliQ (미국)</a>
-      <a href="#case-2" class="toc-link">03 PARO (일본)</a>
-      <a href="#case-3" class="toc-link">04 Hyodol (한국)</a>
-      <a href="#case-5" class="toc-link">05 Labrador (미국)</a>
-      <a href="#case-4" class="toc-link">06 Pepper (일본)</a>
-      <a href="#case-6" class="toc-link">07 Moxi (미국)</a>
-      <a href="#case-7" class="toc-link">08 EksoNR (미국·유럽)</a>
-      <a href="#case-8" class="toc-link">09 Tombot (미국)</a>
-      <a href="#implications" class="toc-link">10 사업화 시사점</a>
-      <a href="#conclusion" class="toc-link">11 결론</a>
-      <a href="#newsfeed" class="toc-link">12 뉴스피드</a>
+      <a href="#cases" class="toc-link">02 사례 분석</a>
+      <a href="#case-1" class="toc-sub-link">↳ ElliQ</a>
+      <a href="#case-2" class="toc-sub-link">↳ PARO</a>
+      <a href="#case-3" class="toc-sub-link">↳ Hyodol</a>
+      <a href="#case-5" class="toc-sub-link">↳ Labrador</a>
+      <a href="#case-4" class="toc-sub-link">↳ Pepper</a>
+      <a href="#case-6" class="toc-sub-link">↳ Moxi</a>
+      <a href="#case-7" class="toc-sub-link">↳ EksoNR</a>
+      <a href="#case-8" class="toc-sub-link">↳ Tombot</a>
+      <a href="#implications" class="toc-link">03 사업화 시사점</a>
+      <a href="#conclusion" class="toc-link">04 결론</a>
+      <a href="#newsfeed" class="toc-link">05 뉴스피드</a>
     </div>
   </div>
 
@@ -965,7 +978,7 @@
   <hr class="divider" />
 
   <!-- CASES -->
-  <div class="section-title">02–09 &nbsp; 사례 분석</div>
+  <div id="cases" class="section-title">02 &nbsp; 사례 분석</div>
   <div class="cases-grid">
 
     <!-- CASE 1: ElliQ -->
@@ -983,11 +996,13 @@
       </div>
       <div class="case-body">
         <div>
-          <div class="case-section-label">// 배경 & 솔루션</div>
+          <div class="case-section-label">// 전략 분석</div>
           <p class="case-desc">
-            미국 독거 노인 약 600만 명이 사회적 고립으로 건강 악화를 경험한다. Intuition Robotics(이스라엘)의 ElliQ는 단순 음성 비서와 달리 AI가 먼저 대화를 시작하고 건강 목표를 추적하는 <strong>선제적 동반 로봇</strong>이다.
+            미국 독거 노인 1,400만 명은 만성적 사회적 고립에 놓여 있으며, 이는 흡연 수준의 건강 위험 인자로 연구에서 확인된다. 기존 해법(전화 안부·방문 봉사)은 인력 의존적이고 확장성이 없다. Intuition Robotics(이스라엘)는 이 공백을 <strong>'AI 선제적 동반'</strong>이라는 새 카테고리로 공략한다.
             <br /><br />
-            뉴욕주 노인청(NYSOFA)과 공식 계약으로 800명 이상에 배포, 미국·캐나다 15개 의료·복지 기관 프로그램이 도입했다. 2025년 CES에서는 원격 보호자가 로봇을 통해 노인을 모니터링하는 <strong>ElliQ Caregiver Solution</strong>을 출시하며 B2B 플랫폼으로 확장했다. 일본 가네마쓰와 파트너십을 체결해 아시아 진출도 진행 중이다.
+            ElliQ의 핵심 기술은 로봇이 먼저 대화를 걸고 <strong>장기 맥락을 기억하는 AI 엔진</strong>이다. 질문에 응답하는 기기가 아니라 건강 목표를 추적하고 정서 변화를 감지해 보호자에게 알리는 케어 인프라로 기능한다. 2025년 CES에서 발표한 Caregiver Solution은 보호자 앱 기반 B2B SaaS로의 확장 신호다.
+            <br /><br />
+            비즈니스 구조의 강점은 <strong>공공 재원(B2G)이 시장을 형성하고 구독이 수익 지속성을 담당</strong>하는 이중 구조에 있다. 뉴욕주 $2.9M으로 배포한 800대는 정부가 초기 리스크를 흡수하며 제품 검증과 레퍼런스를 동시에 확보한 사례다. 미국·캐나다 15개 기관 프로그램 도입, 가네마쓰(일본)와의 아시아 진출 파트너십은 이 B2G 모델의 글로벌 이식 가능성을 실증한다.
           </p>
         </div>
         <div>
@@ -1053,11 +1068,13 @@
       </div>
       <div class="case-body">
         <div>
-          <div class="case-section-label">// 배경 & 솔루션</div>
+          <div class="case-section-label">// 전략 분석</div>
           <p class="case-desc">
-            요양 현장에서 치매 환자 진정을 위한 항정신병 약물은 낙상·인지 저하 가속 등 심각한 부작용을 수반한다. 일본 AIST가 개발한 PARO는 이 <strong>약물 의존을 줄이기 위한 치료 목적 로봇</strong>으로, 촉각·청각·시각 센서를 탑재해 상호작용에 반응한다.
+            치매·인지 저하 환자의 불안·흥분(BPSD)에 대한 1차 대응은 오랫동안 항정신병 약물이었다. 그러나 이 약물은 낙상·인지 가속 저하 등 심각한 부작용을 수반하며, 국제 의료 표준은 비약물 개입(NPI)을 우선시하도록 진화하고 있다. AIST는 이 임상 공백을 30년 이상의 연구로 메웠다.
             <br /><br />
-            FDA 의료기기 II등급 허가를 받은 세계 최초의 치료 로봇이며, Stanford FSI·NBER 공동 연구는 도입 요양시설에서 <strong>직원 수 증가와 돌봄 품질 향상이 동시에 나타남</strong>을 실증했다. 30개국 정부·의료기관이 도입한 검증된 글로벌 레퍼런스다.
+            PARO의 기술 설계는 치료 목적에 최적화됐다. 아기 물범 형태는 낯섦을 줄이고, 5종 센서(촉각·청각·빛·자세·온도)가 사용자 반응에 실시간으로 반응해 <strong>동물 상호작용과 유사한 정서 자극</strong>을 제공한다. 전략의 핵심은 <strong>FDA Class II 의료기기 허가</strong>다. 이는 단순 제품이 아닌 보험 급여 가능한 치료 도구로서의 법적 지위를 부여하며, 병원·요양원의 조달 결정을 임상 근거 기반으로 합리화한다.
+            <br /><br />
+            비즈니스 구조는 고가 B2B 직접 판매다. 임상 논문이 영업을 대신하고, Stanford FSI·NBER 공동 연구가 "도입 시설의 직원 수와 케어 품질이 동시 향상"됨을 실증해 <strong>'로봇 = 인력 보완재'</strong>라는 도입 논거를 강화한다. 30개국 배포 레퍼런스는 국내 의료기기 인허가 전략의 벤치마크다.
           </p>
         </div>
         <div>
@@ -1124,11 +1141,13 @@
       </div>
       <div class="case-body">
         <div>
-          <div class="case-section-label">// 배경 & 솔루션</div>
+          <div class="case-section-label">// 전략 분석</div>
           <p class="case-desc">
-            한국은 2025년 65세 이상 인구 비율 20.3%로 초고령사회에 진입했다. 독거 노인 고독사와 돌봄 공백을 해소하기 위해 Evotion이 개발한 효돌은 <strong>ChatGPT 기반 대화 AI + 실시간 센싱</strong>을 결합한 인형형 케어 로봇이다.
+            한국은 2024년 말 65세 이상 비율 20%를 초과해 공식 초고령사회에 진입했다. 독거 노인 고독사와 돌봄 공백은 복지 문제를 넘어 사회 인프라 붕괴 수준의 리스크이며, 정부는 기술 기반 해법 조달을 적극 추진하고 있다.
             <br /><br />
-            복약·식사 알림과 응급상황 시 보호자·사회복지사에게 자동 알림을 전송한다. 복지부·건강보험공단 주도 공공조달로 전국 배포됐으며, 2025년에는 미국 시장 진출을 추진 중이다. 공공 재원 기반 대규모 배포 모델을 국내에서 실증한 가장 직접적인 레퍼런스다.
+            Evotion 효돌의 전략 핵심은 <strong>접근성 최우선 폼팩터</strong>다. 스마트폰을 사용하지 않는 고령자도 인형을 안고 말을 걸면 서비스가 작동한다. ChatGPT 기반 대화 AI, 복약·식사 알림, 응급 자동 알림이 결합돼 케어 인프라로 기능한다. 화려한 기술보다 <strong>현장 수용성을 우선한 폼팩터 선택</strong>이 대량 배포의 열쇠였다.
+            <br /><br />
+            비즈니스 모델은 B2G(정부 공공조달)가 수익과 확장을 동시에 견인한다. 2019년 Guro구 파일럿(225대, 정부 2억 원 투입) → 복지부·건강보험공단 주도 전국 12,000대 배포라는 경로는 <strong>정부 조달 프로세스에 최적화된 사업 설계가 성공의 본질</strong>임을 보여준다. 2025년 미국 시장 진출 추진은 이 모델의 글로벌 이식 가능성을 시사한다.
           </p>
         </div>
         <div>
@@ -1194,16 +1213,13 @@
       </div>
       <div class="case-body">
         <div>
-          <div class="case-section-label">// 배경 & 솔루션</div>
+          <div class="case-section-label">// 전략 분석</div>
           <p class="case-desc">
-            미국 Labrador Systems의 <strong>Retriever Pro</strong>는 이동 제한 노인·장애인이 겪는
-            '물건 가지러 가다 낙상'이라는 반복적 안전 위협을 제거하기 위해 설계된 반자율 이동형 로봇입니다.
-            간병인 없이도 로봇이 실내를 자율 순항하며 물건을 직접 가져다주는 방식으로 독립적 생활 유지를 지원합니다.
+            미국 낙상 관련 의료비는 연간 약 500억 달러에 달하며, 전체 낙상의 상당수는 물건을 가지러 이동하는 과정에서 발생한다. Labrador Systems는 이 <strong>'반복적이고 예방 가능한 낙상'을 제거</strong>하는 것을 사업의 출발점으로 삼는다.
             <br /><br />
-            2022년 말 <strong>On Lok PACE, Masonic Homes of California, Presbyterian Villages of Michigan</strong>
-            등 복수 요양기관에 상업 배포를 시작했으며, CES 2023에서 Amazon·AARP와의 파트너십을 공개해
-            가정용 시장 진출 의지를 드러냈습니다. 보험사 Nationwide와의 협업은
-            '낙상 리스크 감소 → 보험료 할인' 연계 모델의 가능성을 실증합니다.
+            Retriever Pro의 기술 선택은 실용주의적이다. 완전 자율에 의존하지 않고 <strong>원격 조작을 병행</strong>함으로써 신뢰성을 높이고 예외 상황에 대응한다. 물건을 실어 이동하는 트레이 구조는 단순하지만 핵심 가치 제안에 집중하는 선택이다. 기술의 정교함보다 문제 해결의 완결성을 우선했다.
+            <br /><br />
+            비즈니스 전략은 <strong>기관 레퍼런스 확보 → 소비자 시장 확장</strong> 순서를 따른다. On Lok PACE, Masonic Homes 등 요양 기관에서 안전성을 검증한 뒤, CES 2023 Amazon·AARP 파트너십으로 가정용 시장 진입을 가속화했다. Nationwide Insurance와의 협업은 '낙상 감소 → 보험 클레임 감소 → 보험료 할인'을 잇는 보험 연계 수익 모델의 가능성을 열었다.
           </p>
         </div>
         <div>
@@ -1266,16 +1282,13 @@
       </div>
       <div class="case-body">
         <div>
-          <div class="case-section-label">// 배경 & 솔루션 (시도)</div>
+          <div class="case-section-label">// 전략 분석 (실패 교훈)</div>
           <p class="case-desc">
-            SoftBank의 <strong>Pepper</strong>는 감정 인식 기반 대화·게임·체조 루틴 수행 로봇으로,
-            일본의 심각한 요양 인력 부족을 기술로 돌파하겠다는 구상 하에 전국 요양원
-            약 <strong>500곳</strong>에 배포되었습니다. 동반 제품 Hug(이동 보조 리프팅 로봇)와 함께 인력 대체를 목표로 했습니다.
+            SoftBank의 Pepper는 세계 최초의 감정 인식 상업 로봇으로, 일본의 요양 인력 부족을 배경으로 전국 요양원 약 <strong>500곳</strong>에 배포됐다. 감정 인식·대화·게임·체조 루틴 수행 역량을 갖춘 Pepper는 이 시기 가장 기술적으로 앞선 케어 로봇이었다.
             <br /><br />
-            그러나 현장 운용 결과는 설계 의도와 달랐습니다. Pepper는 치매 환자를 반복 인식하지 못했고,
-            충전·재부팅·설명이 필요해 직원에게 <strong>추가 업무</strong>를 만들었습니다.
-            Hug는 배포 수일 만에 현장 직원들이 사용을 중단했습니다.
-            이 사례는 '기술 가능성'과 '현장 운용 현실' 간의 간극이 사업화를 얼마나 무력화할 수 있는지 보여주는 반면교사입니다.
+            그러나 현장은 달랐다. <strong>세 가지 구조적 실패</strong>가 동시에 발생했다: 치매 환자의 반복 인식 실패로 신뢰가 무너졌고, 충전·재부팅·설명 등이 직원 업무를 오히려 증가시켰으며, 리프팅 로봇 Hug는 수일 내 현장 사용이 중단됐다. 기술이 직원의 문제를 해결하는 것이 아니라 <strong>직원에게 새 문제를 만든</strong> 것이다.
+            <br /><br />
+            전략적 교훈은 명확하다. <strong>'사용자(노인)' 설계뿐 아니라 '운용자(직원)' 설계가 케어 로봇 사업화의 선결 조건</strong>이다. 콘텐츠 구독 수익 모델의 방향성 자체는 올바르나, 기반 하드웨어의 현장 운용 기준 충족이 전제돼야 작동한다.
           </p>
         </div>
         <div>
@@ -1341,15 +1354,13 @@
       </div>
       <div class="case-body">
         <div>
-          <div class="case-section-label">// 배경 & 솔루션</div>
+          <div class="case-section-label">// 전략 분석</div>
           <p class="case-desc">
-            미국 병원에서 간호사의 하루 업무 중 <strong>약 30%</strong>는 환자 간호와 무관한
-            물품 운반, 검체 이동 등 반복 물류 업무로 채워집니다. Diligent Robotics의 <strong>Moxi</strong>는
-            이 비임상 업무를 대신 수행해 간호사가 환자 곁에 머물 수 있도록 설계된 케어 서포트 로봇입니다.
+            미국 간호사 이직률 급등의 핵심 요인 중 하나는 번아웃이며, 그 주요 원인은 환자 케어와 무관한 반복 물류 업무다. 간호사 업무 시간의 약 30%가 약품·검체·물품 운반에 소모되는데, 이 영역은 간호 전문 역량이 전혀 필요하지 않다. Diligent Robotics는 이 구조적 비효율을 표적으로 삼는다.
             <br /><br />
-            현재 미국 25개 병원, 23개 헬스 시스템에 배포되어 있으며, 2025년 10월 AI 기반으로
-            전면 재설계된 <strong>Moxi 2.0</strong>을 공개했습니다.
-            Swisslog Healthcare와의 파트너십으로 미국 병원 내 물류 통합을 확대하고 있어 확장성이 검증된 모델입니다.
+            Moxi의 기술 구조는 모바일 매니퓰레이터(이동 플랫폼 + 팔)로, 엘리베이터 탑승·자동문 개폐·물품 픽업·드롭을 완전 자율로 수행한다. 2025년 10월 출시된 <strong>Moxi 2.0</strong>은 AI 기반 태스크 인텔리전스로 더 복잡한 시나리오를 처리하며, 단일 병원 15대 이상 배포를 목표로 규모화를 추진한다.
+            <br /><br />
+            비즈니스 모델은 <strong>RaaS(로봇-as-a-Service) 월정액 구독</strong>이다. 초기 자본 부담 없이 성과 기반 계약이 가능해 병원 도입 장벽을 낮춘다. 575,000시간·15억 보라는 측정 가능한 ROI 데이터는 B2B 영업의 핵심 설득 무기다.
           </p>
         </div>
         <div>
@@ -1415,17 +1426,13 @@
       </div>
       <div class="case-body">
         <div>
-          <div class="case-section-label">// 배경 & 솔루션</div>
+          <div class="case-section-label">// 전략 분석</div>
           <p class="case-desc">
-            뇌졸중·척수 손상 후 보행 회복은 반복 훈련량에 비례하지만, 치료사 1인이 하루 지원할 수 있는
-            훈련 횟수는 물리적으로 제한됩니다. Ekso Bionics의 <strong>EksoNR</strong>은 하지 외골격 로봇으로
-            환자 체중을 지지하면서 정확한 보행 패턴을 반복 훈련할 수 있게 해,
-            치료 강도를 인력 의존 없이 높일 수 있습니다.
+            재활의학의 핵심 딜레마는 치료 효과가 훈련 강도·빈도에 비례하지만, 치료사 1인이 지원 가능한 환자 수는 물리적으로 제한된다는 것이다. 뇌졸중·척수 손상 환자의 보행 회복 가능성을 실현하려면 반복 훈련량을 늘려야 하지만, 기존 방식으로는 인력 병목을 해소할 수 없다.
             <br /><br />
-            뇌졸중·척수손상(SCI)·다발성 경화증(MS)·후천성 뇌 손상(ABI) 4개 적응증에 대해
-            <strong>FDA 허가</strong>와 <strong>CE 마크</strong>를 동시 보유한 세계 최다 임상 사용 재활 외골격입니다.
-            2024년에는 AI 기반 보행 코칭 소프트웨어 <strong>GaitCoach</strong>를 추가 출시해
-            데이터 기반 치료 고도화로 확장했습니다.
+            EksoNR은 이 병목을 외골격 기술로 해제한다. 착용한 환자의 체중을 로봇이 지지하면서 정확한 보행 패턴을 반복 훈련시키며, 치료사는 파라미터를 실시간 조정한다. 2024년 출시된 <strong>GaitCoach</strong>는 AI가 보행 데이터를 분석해 코칭 권고를 생성하는 소프트웨어 레이어로, 치료 데이터 플랫폼으로의 진화를 시사한다.
+            <br /><br />
+            전략의 핵심은 <strong>규제 장벽을 경쟁 해자(moat)로 전환</strong>한 포지셔닝이다. 뇌졸중·SCI·MS·ABI 4개 적응증에 대한 FDA 허가와 CE 마크를 동시 보유한 경쟁자는 극소수다. 2024년 CMS Medicare의 개인용 외골격 급여 코드 신설은 '병원 B2B → 개인 처방 + 보험 급여' 기반 수익 모델로의 확장 기반이 됐다.
           </p>
         </div>
         <div>
@@ -1491,17 +1498,13 @@
       </div>
       <div class="case-body">
         <div>
-          <div class="case-section-label">// 배경 & 솔루션</div>
+          <div class="case-section-label">// 전략 분석</div>
           <p class="case-desc">
-            치매 환자의 행동·심리 증상(BPSD)은 요양시설 직원 소진의 주요 원인이며,
-            기존 대응은 항불안제·항정신병 약물에 의존하는 경우가 많습니다.
-            Tombot의 <strong>Jennie</strong>는 실제 강아지와 유사한 동작·촉감·음성을 구현한 로봇 반려동물로,
-            약물 없이 BPSD를 완화하는 비약물 개입(NPI) 솔루션입니다.
+            치매 환자의 BPSD(행동·심리 증상) — 공격성·불안·배회 — 는 요양시설 직원 소진의 1순위 요인이며, 표준 대응은 항정신병 약물이다. 그러나 약물은 낙상·인지 저하 부작용을 수반하고, 임상계의 비약물 개입(NPI) 선호도는 높아지고 있지만 인력 의존적이라는 한계가 있다.
             <br /><br />
-            생산 비용과 진입 장벽이 높은 PARO(물범 로봇)의 대안으로,
-            소비자 친화적 가격대와 친숙한 강아지 형태로 차별화합니다.
-            2025년 6월 <strong>시리즈 A $6.1M</strong>을 조달했으며,
-            700명 이상 시니어를 대상으로 한 3회의 동료 심사(peer-reviewed) 임상 연구를 완료했습니다.
+            Tombot Jennie의 기술 전략은 <strong>친숙한 형태 + 최소 개입 상호작용</strong>이다. 강아지라는 폼팩터는 치매 환자에게 익숙한 반려동물 패턴을 활용하면서, 실제 동물 케어의 부담(알레르기·배변·관리)을 제거한다. AI가 실제 강아지와 유사한 동작·촉감·음성을 구현해 BPSD를 완화한다.
+            <br /><br />
+            비즈니스 포지셔닝은 <strong>PARO의 대중화 버전</strong>이다. PARO가 $6,000~8,000 고가 의료기기 B2B에 집중하는 반면, Tombot은 낮은 가격대로 가정 D2C와 요양원 B2B를 동시 공략한다. 'FDA 허가 없이 임상 데이터로 신뢰성을 구축'하는 전략도 차별점이다. 2025년 6월 Series A $6.1M 조달, 700명+ 대상 3회 peer-reviewed 임상, 16,000명 대기자는 제품 출시 전에 수요를 먼저 실증한 상태다.
           </p>
         </div>
         <div>
@@ -1558,7 +1561,7 @@
 
   <!-- IMPLICATIONS -->
   <section id="implications" class="implication-section">
-    <div class="section-title">10 &nbsp; 통신사 비즈니스 시사점 종합</div>
+    <div class="section-title">03 &nbsp; 통신사 비즈니스 시사점 종합</div>
     <div class="implication-grid">
       <div class="impl-card">
         <div class="impl-card-icon">📡</div>
@@ -1618,7 +1621,7 @@
 
   <!-- CONCLUSION -->
   <section id="conclusion">
-    <div class="section-title">11 &nbsp; 결론 및 권고</div>
+    <div class="section-title">04 &nbsp; 결론 및 권고</div>
     <div class="conclusion">
       <h3>통신사의 시니어 케어 로봇 사업 진입을 위한 핵심 권고</h3>
       <p class="conclusion-body">
@@ -1643,7 +1646,7 @@
 
   <!-- NEWS FEED -->
   <section id="newsfeed">
-    <div class="section-title">12 &nbsp; 참고 뉴스피드 — 최신 동향 모음</div>
+    <div class="section-title">05 &nbsp; 참고 뉴스피드 — 최신 동향 모음</div>
     <p style="font-size:12px; color:var(--text-muted); margin-bottom:20px; font-family:'JetBrains Mono',monospace;">
       // 사례 분석 외 참고할 최신 기사·연구·정책 자료. 클릭 시 원문으로 이동합니다.
     </p>
