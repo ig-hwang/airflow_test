@@ -466,32 +466,54 @@
       line-height: 1.75;
     }
 
-    .kpi-list {
+    /* ── RESULT ITEMS (replaces kpi) ── */
+    .result-list {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
     }
 
-    .kpi-item {
+    .result-item {
       background: var(--surface2);
       border: 1px solid var(--border);
       border-radius: 7px;
       padding: 10px 14px;
     }
 
-    .kpi-value {
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--accent);
+    .result-cat {
+      font-size: 9px;
       font-family: 'JetBrains Mono', monospace;
-      line-height: 1;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
       margin-bottom: 3px;
     }
 
-    .kpi-desc {
-      font-size: 11px;
-      color: var(--text-muted);
+    .result-value {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--accent);
+      font-family: 'JetBrains Mono', monospace;
+      line-height: 1.1;
+      margin-bottom: 3px;
     }
+
+    .result-desc {
+      font-size: 11px;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    /* failure variant */
+    .result-item.fail .result-cat { color: rgba(224,108,117,0.6); }
+    .result-item.fail .result-value { color: var(--accent3); }
+
+    /* color per case */
+    .case-card[data-color="blue"]   .result-value { color: var(--accent2); }
+    .case-card[data-color="purple"] .result-value { color: var(--accent5); }
+    .case-card[data-color="yellow"] .result-value { color: var(--accent4); }
+    .case-card[data-color="red"]    .result-value { color: var(--accent3); }
 
     .case-footer {
       padding: 14px 24px;
@@ -772,10 +794,6 @@
     .case-card[data-color="yellow"] .case-num { color: var(--accent4); background: rgba(229,192,123,0.1); border-color: rgba(229,192,123,0.25); }
     .case-card[data-color="red"] .case-num    { color: var(--accent3); background: rgba(224,108,117,0.1); border-color: rgba(224,108,117,0.25); }
 
-    .case-card[data-color="blue"] .kpi-value  { color: var(--accent2); }
-    .case-card[data-color="purple"] .kpi-value { color: var(--accent5); }
-    .case-card[data-color="yellow"] .kpi-value { color: var(--accent4); }
-    .case-card[data-color="red"] .kpi-value   { color: var(--accent3); }
 
     .case-card[data-color="blue"]:hover  { border-color: var(--accent2); }
     .case-card[data-color="purple"]:hover { border-color: var(--accent5); }
@@ -965,34 +983,35 @@
       </div>
       <div class="case-body">
         <div>
-          <div class="case-section-label">// 사례 개요</div>
+          <div class="case-section-label">// 배경 & 솔루션</div>
           <p class="case-desc">
-            이스라엘 스타트업 Intuition Robotics가 개발한 ElliQ는 독거 노인의 외로움을 해소하기 위한 AI 동반 로봇입니다.
-            뉴욕주 노인청(NYSOFA)은 2022년부터 800명 이상의 독거 노인을 대상으로 공식 배포 프로그램을 운영했습니다.
+            미국 독거 노인 약 600만 명이 사회적 고립으로 건강 악화를 경험한다. Intuition Robotics(이스라엘)의 ElliQ는 단순 음성 비서와 달리 AI가 먼저 대화를 시작하고 건강 목표를 추적하는 <strong>선제적 동반 로봇</strong>이다.
             <br /><br />
-            2024년 CES에서 <strong>ElliQ 3</strong>를 발표하며 생성형 AI 기반으로 업그레이드되었고,
-            미국 내 15개 주 정부 기관과 파트너십을 체결, "수천 명"의 노인들이 사용 중입니다.
-            일본 가네마쓰(Kanematsu)와도 파트너십을 체결해 일본 시장 진출도 진행 중입니다.
+            뉴욕주 노인청(NYSOFA)과 공식 계약으로 800명 이상에 배포, 미국 15개 주 정부기관이 도입했다. 2025년 CES에서는 원격 보호자가 로봇을 통해 노인을 모니터링하는 <strong>ElliQ Caregiver Solution</strong>을 출시하며 B2B 플랫폼으로 확장했다. 일본 가네마쓰와 파트너십을 체결해 아시아 진출도 진행 중이다.
           </p>
         </div>
         <div>
-          <div class="case-section-label">// 핵심 성과 지표 (KPI)</div>
-          <div class="kpi-list">
-            <div class="kpi-item">
-              <div class="kpi-value">95%</div>
-              <div class="kpi-desc">외로움 감소율 (NYSOFA 파일럿 공식 보고)</div>
+          <div class="case-section-label">// 검증된 성과</div>
+          <div class="result-list">
+            <div class="result-item">
+              <div class="result-cat">임상 효과</div>
+              <div class="result-value">95%</div>
+              <div class="result-desc">외로움 감소율 — NYSOFA 파일럿 공식 보고서</div>
             </div>
-            <div class="kpi-item">
-              <div class="kpi-value">30회/일</div>
-              <div class="kpi-desc">사용자 평균 일일 상호작용 횟수</div>
+            <div class="result-item">
+              <div class="result-cat">참여 지속성</div>
+              <div class="result-value">30회 / 일</div>
+              <div class="result-desc">사용자 일평균 상호작용 횟수, 주 6일 유지</div>
             </div>
-            <div class="kpi-item">
-              <div class="kpi-value">$2.9M</div>
-              <div class="kpi-desc">뉴욕주 2023 회계연도 예산 투입액</div>
+            <div class="result-item">
+              <div class="result-cat">공공 재원</div>
+              <div class="result-value">$2.9M</div>
+              <div class="result-desc">뉴욕주 2023 회계연도 정부 투입 예산</div>
             </div>
-            <div class="kpi-item">
-              <div class="kpi-value">75%↑</div>
-              <div class="kpi-desc">건강·운동·정신 관련 상호작용 비율</div>
+            <div class="result-item">
+              <div class="result-cat">건강 연관성</div>
+              <div class="result-value">75%↑</div>
+              <div class="result-desc">전체 대화 중 신체·정신·사회 건강 관련 비율</div>
             </div>
           </div>
         </div>
@@ -1034,35 +1053,35 @@
       </div>
       <div class="case-body">
         <div>
-          <div class="case-section-label">// 사례 개요</div>
+          <div class="case-section-label">// 배경 & 솔루션</div>
           <p class="case-desc">
-            일본 산업기술총합연구소(AIST)가 개발한 물개형 치료 로봇 PARO는
-            세계에서 가장 널리 상용 배포된 시니어 케어 로봇입니다.
-            일본 내 3,000대를 포함해 30개국 6,000대 이상이 요양원·병원에서 운용 중입니다.
+            요양 현장에서 치매 환자 진정을 위한 항정신병 약물은 낙상·인지 저하 가속 등 심각한 부작용을 수반한다. 일본 AIST가 개발한 PARO는 이 <strong>약물 의존을 줄이기 위한 치료 목적 로봇</strong>으로, 촉각·청각·시각 센서를 탑재해 상호작용에 반응한다.
             <br /><br />
-            스탠퍼드대 FSI 연구(2021~2024)에 따르면 PARO 등 케어 로봇 도입 요양시설은
-            비도입 시설 대비 직원 수가 3~8% 더 많았으며, 욕창·신체 억제 감소 등
-            돌봄 품질 향상이 확인되었습니다.
+            FDA 의료기기 II등급 허가를 받은 세계 최초의 치료 로봇이며, Stanford FSI·NBER 공동 연구는 도입 요양시설에서 <strong>직원 수 증가와 돌봄 품질 향상이 동시에 나타남</strong>을 실증했다. 30개국 정부·의료기관이 도입한 검증된 글로벌 레퍼런스다.
           </p>
         </div>
         <div>
-          <div class="case-section-label">// 핵심 성과 지표 (KPI)</div>
-          <div class="kpi-list">
-            <div class="kpi-item">
-              <div class="kpi-value">6,000+</div>
-              <div class="kpi-desc">전 세계 누적 배포 대수 (30개국)</div>
+          <div class="case-section-label">// 검증된 성과</div>
+          <div class="result-list">
+            <div class="result-item">
+              <div class="result-cat">배포 규모</div>
+              <div class="result-value">6,000+ 대</div>
+              <div class="result-desc">30개국 누적 배포 (일본 내 3,000대 포함)</div>
             </div>
-            <div class="kpi-item">
-              <div class="kpi-value">3~8%</div>
-              <div class="kpi-desc">케어 로봇 도입 시설의 직원 수 증가 (Stanford FSI)</div>
+            <div class="result-item">
+              <div class="result-cat">인력 효과 (Stanford FSI / NBER)</div>
+              <div class="result-value">+3~8%</div>
+              <div class="result-desc">도입 시설의 직원 수 증가 — 로봇이 인력 보완재임을 실증</div>
             </div>
-            <div class="kpi-item">
-              <div class="kpi-value">진정율 ↑</div>
-              <div class="kpi-desc">치매 환자 약물 없이 흥분 완화 효과 다수 임상 확인</div>
+            <div class="result-item">
+              <div class="result-cat">돌봄 품질</div>
+              <div class="result-value">욕창·억제 감소</div>
+              <div class="result-desc">케어 로봇 도입 시설에서 두 가지 핵심 품질 지표 동시 개선</div>
             </div>
-            <div class="kpi-item">
-              <div class="kpi-value">2012</div>
-              <div class="kpi-desc">기네스 세계기록: 가장 치료적인 로봇 인정</div>
+            <div class="result-item">
+              <div class="result-cat">공인 인증</div>
+              <div class="result-value">FDA II등급 의료기기</div>
+              <div class="result-desc">세계 최초 치료 로봇 의료기기 허가 + 기네스 세계기록</div>
             </div>
           </div>
         </div>
@@ -1105,36 +1124,35 @@
       </div>
       <div class="case-body">
         <div>
-          <div class="case-section-label">// 사례 개요</div>
+          <div class="case-section-label">// 배경 & 솔루션</div>
           <p class="case-desc">
-            Hyodol(효돌)은 국내 스타트업 Evotion이 개발한 AI 인형 로봇입니다.
-            복지부·국민건강보험공단 주도로 독거 노인에게 배포되며,
-            2025년 기준 <strong>12,000대 이상</strong>이 전국 독거 노인 가정에 배치되었습니다.
+            한국은 2025년 65세 이상 인구 비율 20.3%로 초고령사회에 진입했다. 독거 노인 고독사와 돌봄 공백을 해소하기 위해 Evotion이 개발한 효돌은 <strong>ChatGPT 기반 대화 AI + 실시간 센싱</strong>을 결합한 인형형 케어 로봇이다.
             <br /><br />
-            ChatGPT 기반 챗봇으로 말벗 기능을 제공하고,
-            복약·식사 알림, 응급상황 시 사회복지사·가족 알림 등 기능을 탑재합니다.
-            69명 대상 임상 연구에서 6주 사용 후 우울감 감소·인지 점수 개선이 확인되었습니다.
-            2025년 미국 시장 진출도 추진 중입니다.
+            복약·식사 알림과 응급상황 시 보호자·사회복지사에게 자동 알림을 전송한다. 복지부·건강보험공단 주도 공공조달로 전국 배포됐으며, 2025년에는 미국 시장 진출을 추진 중이다. 공공 재원 기반 대규모 배포 모델을 국내에서 실증한 가장 직접적인 레퍼런스다.
           </p>
         </div>
         <div>
-          <div class="case-section-label">// 핵심 성과 지표 (KPI)</div>
-          <div class="kpi-list">
-            <div class="kpi-item">
-              <div class="kpi-value">12,000+</div>
-              <div class="kpi-desc">국내 독거 노인 가정 배포 대수 (2025년 기준)</div>
+          <div class="case-section-label">// 검증된 성과</div>
+          <div class="result-list">
+            <div class="result-item">
+              <div class="result-cat">배포 규모</div>
+              <div class="result-value">12,000+ 대</div>
+              <div class="result-desc">전국 독거 노인 가정 배포 (2025년 기준, 공공조달)</div>
             </div>
-            <div class="kpi-item">
-              <div class="kpi-value">임상 효과</div>
-              <div class="kpi-desc">6주 사용 후 우울감 감소·인지 점수 개선 (69명 연구)</div>
+            <div class="result-item">
+              <div class="result-cat">임상 효과</div>
+              <div class="result-value">우울감 ↓ · 인지점수 ↑</div>
+              <div class="result-desc">6주 사용 후 두 지표 동시 개선 (69명 대상 연구)</div>
             </div>
-            <div class="kpi-item">
-              <div class="kpi-value">요양원 입소 지연</div>
-              <div class="kpi-desc">경도 인지장애 사용자의 시설 입소 지연 효과 확인</div>
+            <div class="result-item">
+              <div class="result-cat">사회적 비용 절감</div>
+              <div class="result-value">요양원 입소 지연</div>
+              <div class="result-desc">경도 인지장애 사용자에서 시설 입소 지연 효과 확인</div>
             </div>
-            <div class="kpi-item">
-              <div class="kpi-value">200M원</div>
-              <div class="kpi-desc">2019년 정부 최초 배포 예산 투입</div>
+            <div class="result-item">
+              <div class="result-cat">재원 구조</div>
+              <div class="result-value">정부 공공조달</div>
+              <div class="result-desc">초기 200M원 투입, 대당 약 160만 원 — B2G 모델 실증</div>
             </div>
           </div>
         </div>
@@ -1176,35 +1194,40 @@
       </div>
       <div class="case-body">
         <div>
-          <div class="case-section-label">// 사례 개요</div>
+          <div class="case-section-label">// 배경 & 솔루션</div>
           <p class="case-desc">
-            미국 Labrador Systems의 Retriever Pro는 이동이 불편한 노인·장애인을
-            위해 물건을 자율적으로 가져다주는 반자율 이동형 로봇입니다.
+            미국 Labrador Systems의 <strong>Retriever Pro</strong>는 이동 제한 노인·장애인이 겪는
+            '물건 가지러 가다 낙상'이라는 반복적 안전 위협을 제거하기 위해 설계된 반자율 이동형 로봇입니다.
+            간병인 없이도 로봇이 실내를 자율 순항하며 물건을 직접 가져다주는 방식으로 독립적 생활 유지를 지원합니다.
             <br /><br />
-            2022년 말부터 <strong>On Lok PACE, Masonic Homes of California,
-            Presbyterian Villages of Michigan</strong> 등 복수의 요양시설에 최초 상용 배포를 시작했고,
-            Amazon·AARP와 CES 2023 파트너십을 통해 가정용 시장 진출을 가속화했습니다.
-            낙상 방지와 독립적 생활 연장이 핵심 가치 제안입니다.
+            2022년 말 <strong>On Lok PACE, Masonic Homes of California, Presbyterian Villages of Michigan</strong>
+            등 복수 요양기관에 상업 배포를 시작했으며, CES 2023에서 Amazon·AARP와의 파트너십을 공개해
+            가정용 시장 진출 의지를 드러냈습니다. 보험사 Nationwide와의 협업은
+            '낙상 리스크 감소 → 보험료 할인' 연계 모델의 가능성을 실증합니다.
           </p>
         </div>
         <div>
-          <div class="case-section-label">// 핵심 성과 지표 (KPI)</div>
-          <div class="kpi-list">
-            <div class="kpi-item">
-              <div class="kpi-value">10+</div>
-              <div class="kpi-desc">미국 내 초기 상용 고객 요양기관 수</div>
+          <div class="case-section-label">// 검증된 성과</div>
+          <div class="result-list">
+            <div class="result-item">
+              <div class="result-cat">초기 상용 배포</div>
+              <div class="result-value">10+ 기관</div>
+              <div class="result-desc">미국 내 요양·PACE 시설 최초 상용 고객 확보 — TechCrunch 보도</div>
             </div>
-            <div class="kpi-item">
-              <div class="kpi-value">Amazon 파트너</div>
-              <div class="kpi-desc">CES 2023 Amazon·AARP와 공동 쇼케이스</div>
+            <div class="result-item">
+              <div class="result-cat">전략 파트너십</div>
+              <div class="result-value">Amazon · AARP</div>
+              <div class="result-desc">CES 2023 공동 쇼케이스 — 가정용 시장 진출 의사 공식화</div>
             </div>
-            <div class="kpi-item">
-              <div class="kpi-value">낙상 방지</div>
-              <div class="kpi-desc">물건 운반 지원으로 이동 중 낙상 위험 감소</div>
+            <div class="result-item">
+              <div class="result-cat">안전 효과</div>
+              <div class="result-value">낙상 위험↓</div>
+              <div class="result-desc">물건 운반 업무 대행으로 이동 중 낙상 사고 주요 원인 제거</div>
             </div>
-            <div class="kpi-item">
-              <div class="kpi-value">Nationwide Ins.</div>
-              <div class="kpi-desc">미국 보험사와 리스크 감소 연계 협업</div>
+            <div class="result-item">
+              <div class="result-cat">보험 연계</div>
+              <div class="result-value">Nationwide 협업</div>
+              <div class="result-desc">보험사와 '리스크 감소 연동 보험료 할인' 모델 탐색 — Robotics 24/7</div>
             </div>
           </div>
         </div>
@@ -1243,35 +1266,40 @@
       </div>
       <div class="case-body">
         <div>
-          <div class="case-section-label">// 사례 개요</div>
+          <div class="case-section-label">// 배경 & 솔루션 (시도)</div>
           <p class="case-desc">
-            SoftBank의 Pepper 로봇은 일본 요양원 약 <strong>500곳</strong>에 배포되어
-            게임·체조·루틴 관리 등을 수행했습니다.
+            SoftBank의 <strong>Pepper</strong>는 감정 인식 기반 대화·게임·체조 루틴 수행 로봇으로,
+            일본의 심각한 요양 인력 부족을 기술로 돌파하겠다는 구상 하에 전국 요양원
+            약 <strong>500곳</strong>에 배포되었습니다. 동반 제품 Hug(이동 보조 리프팅 로봇)와 함께 인력 대체를 목표로 했습니다.
             <br /><br />
-            그러나 실제 현장에서는 유지보수 부담, 방문자 인식 실패 등 한계가 명확하게 드러났습니다.
-            Hug(리프팅 로봇)는 운용 번거로움으로 며칠 만에 중단되었고,
-            일부 로봇은 추가 업무를 만들어낸다는 직원 불만도 발생했습니다.
-            이 사례는 <strong>도입 편의성·유지보수 설계</strong>의 중요성을 반면교사로 제시합니다.
+            그러나 현장 운용 결과는 설계 의도와 달랐습니다. Pepper는 치매 환자를 반복 인식하지 못했고,
+            충전·재부팅·설명이 필요해 직원에게 <strong>추가 업무</strong>를 만들었습니다.
+            Hug는 배포 수일 만에 현장 직원들이 사용을 중단했습니다.
+            이 사례는 '기술 가능성'과 '현장 운용 현실' 간의 간극이 사업화를 얼마나 무력화할 수 있는지 보여주는 반면교사입니다.
           </p>
         </div>
         <div>
-          <div class="case-section-label">// 핵심 성과 지표 (KPI)</div>
-          <div class="kpi-list">
-            <div class="kpi-item">
-              <div class="kpi-value">500곳</div>
-              <div class="kpi-desc">일본 요양원 Pepper 배포 시설 수</div>
+          <div class="case-section-label">// 검증된 성과 & 실패 교훈</div>
+          <div class="result-list">
+            <div class="result-item">
+              <div class="result-cat">배포 규모</div>
+              <div class="result-value">500 시설</div>
+              <div class="result-desc">일본 전국 요양원 배포 — 대규모 실증 데이터 확보</div>
             </div>
-            <div class="kpi-item">
-              <div class="kpi-value">콘텐츠 구독</div>
-              <div class="kpi-desc">체조·게임 콘텐츠 구독 부가 수익 모델 시도</div>
+            <div class="result-item">
+              <div class="result-cat">수익 모델 시도</div>
+              <div class="result-value">콘텐츠 구독</div>
+              <div class="result-desc">체조·게임 콘텐츠 구독 부가 수익 모델 — 원리상 유효한 접근</div>
             </div>
-            <div class="kpi-item">
-              <div class="kpi-value">⚠ 운용 부담</div>
-              <div class="kpi-desc">이동·충전·재부팅·설명 등 직원 추가 업무 발생</div>
+            <div class="result-item fail">
+              <div class="result-cat">운용 실패</div>
+              <div class="result-value">직원 업무 증가</div>
+              <div class="result-desc">이동·충전·재부팅·설명 등 현장 직원 추가 부담 발생 → 채택 포기</div>
             </div>
-            <div class="kpi-item">
-              <div class="kpi-value">⚠ 인식 한계</div>
-              <div class="kpi-desc">치매 환자 반복 인식 실패, 직원 신뢰 저하</div>
+            <div class="result-item fail">
+              <div class="result-cat">기술 한계</div>
+              <div class="result-value">인식 반복 실패</div>
+              <div class="result-desc">치매 환자 얼굴·맥락 인식 실패 반복 → 직원 및 환자 신뢰 붕괴</div>
             </div>
           </div>
         </div>
@@ -1313,35 +1341,39 @@
       </div>
       <div class="case-body">
         <div>
-          <div class="case-section-label">// 사례 개요</div>
+          <div class="case-section-label">// 배경 & 솔루션</div>
           <p class="case-desc">
-            텍사스 오스틴 기반 스타트업 Diligent Robotics의 Moxi는 병원 내 물품·약품·검체
-            배달을 자율 수행하는 케어 서포트 로봇입니다. 간호사가 직접 해야 했던
-            비임상 반복 업무를 대신함으로써 간호 인력이 <strong>환자 곁에 머무는 시간</strong>을 늘려줍니다.
+            미국 병원에서 간호사의 하루 업무 중 <strong>최대 40%</strong>는 환자 간호와 무관한
+            물품 운반, 검체 이동 등 반복 물류 업무로 채워집니다. Diligent Robotics의 <strong>Moxi</strong>는
+            이 비임상 업무를 대신 수행해 간호사가 환자 곁에 머물 수 있도록 설계된 케어 서포트 로봇입니다.
             <br /><br />
-            현재 미국 25개 병원, 23개 헬스 시스템에 배포되어 있으며,
-            2025년 10월에는 AI를 기반으로 전면 재설계된 <strong>Moxi 2.0</strong>을 공개했습니다.
-            Swisslog Healthcare와의 파트너십을 통해 유럽 진출도 추진 중입니다.
+            현재 미국 25개 병원, 23개 헬스 시스템에 배포되어 있으며, 2025년 10월 AI 기반으로
+            전면 재설계된 <strong>Moxi 2.0</strong>을 공개했습니다.
+            Swisslog Healthcare와의 파트너십을 통해 유럽 진출도 본격화하고 있어 글로벌 확장성이 검증된 모델입니다.
           </p>
         </div>
         <div>
-          <div class="case-section-label">// 핵심 성과 지표 (KPI)</div>
-          <div class="kpi-list">
-            <div class="kpi-item">
-              <div class="kpi-value">575,000h</div>
-              <div class="kpi-desc">간호사 절감 누적 시간 (전체 플리트 기준)</div>
+          <div class="case-section-label">// 검증된 성과</div>
+          <div class="result-list">
+            <div class="result-item">
+              <div class="result-cat">인력 효율</div>
+              <div class="result-value">575,000시간</div>
+              <div class="result-desc">간호사 절감 누적 시간 (전체 플리트 기준) — The Robot Report</div>
             </div>
-            <div class="kpi-item">
-              <div class="kpi-value">1M+</div>
-              <div class="kpi-desc">누적 배달 건수 (약품·검체·물품)</div>
+            <div class="result-item">
+              <div class="result-cat">운영 실적</div>
+              <div class="result-value">100만 건+</div>
+              <div class="result-desc">약품·검체·물품 누적 자율 배달 건수 달성</div>
             </div>
-            <div class="kpi-item">
-              <div class="kpi-value">1.5B 걸음</div>
-              <div class="kpi-desc">간호사가 절감한 누적 보행 거리</div>
+            <div class="result-item">
+              <div class="result-cat">신체 부담 절감</div>
+              <div class="result-value">15억 보</div>
+              <div class="result-desc">간호사 누적 절감 보행 거리 — 근골격계 부상 리스크 감소</div>
             </div>
-            <div class="kpi-item">
-              <div class="kpi-value">15+ 대/병원</div>
-              <div class="kpi-desc">Moxi 2.0 목표 단일 병원 배포 규모</div>
+            <div class="result-item">
+              <div class="result-cat">확장 목표</div>
+              <div class="result-value">15+ 대/병원</div>
+              <div class="result-desc">Moxi 2.0 단일 병원 목표 배포 규모 — 공식 블로그</div>
             </div>
           </div>
         </div>
@@ -1383,37 +1415,41 @@
       </div>
       <div class="case-body">
         <div>
-          <div class="case-section-label">// 사례 개요</div>
+          <div class="case-section-label">// 배경 & 솔루션</div>
           <p class="case-desc">
-            미국 Ekso Bionics의 EksoNR은 뇌졸중·척수 손상·다발성 경화증·후천성 뇌 손상 환자의
-            보행 재활을 돕는 하지 외골격 로봇입니다.
-            <strong>FDA 허가(뇌졸중·SCI·MS·ABI)</strong> 및 <strong>CE 마크</strong>를 모두 보유한
-            세계에서 가장 임상 사용률이 높은 재활 외골격으로,
-            전 세계 500개 이상 재활 센터에 배포되어 있습니다.
+            뇌졸중·척수 손상 후 보행 회복은 반복 훈련량에 비례하지만, 치료사 1인이 하루 지원할 수 있는
+            훈련 횟수는 물리적으로 제한됩니다. Ekso Bionics의 <strong>EksoNR</strong>은 하지 외골격 로봇으로
+            환자 체중을 지지하면서 정확한 보행 패턴을 반복 훈련할 수 있게 해,
+            치료 강도를 인력 의존 없이 높일 수 있습니다.
             <br /><br />
-            2024년 미국 CMS(Medicare)가 개인용 외골격에 대한 급여 코드를 신설하며
-            보험 적용 기반이 공식화되었습니다. 2024년에는 AI 기반 보행 코칭 소프트웨어
-            <strong>GaitCoach</strong>를 추가 출시했습니다.
+            뇌졸중·척수손상(SCI)·다발성 경화증(MS)·후천성 뇌 손상(ABI) 4개 적응증에 대해
+            <strong>FDA 허가</strong>와 <strong>CE 마크</strong>를 동시 보유한 세계 최다 임상 사용 재활 외골격입니다.
+            2024년에는 AI 기반 보행 코칭 소프트웨어 <strong>GaitCoach</strong>를 추가 출시해
+            데이터 기반 치료 고도화로 확장했습니다.
           </p>
         </div>
         <div>
-          <div class="case-section-label">// 핵심 성과 지표 (KPI)</div>
-          <div class="kpi-list">
-            <div class="kpi-item">
-              <div class="kpi-value">500+</div>
-              <div class="kpi-desc">전 세계 도입 재활 센터 수</div>
+          <div class="case-section-label">// 검증된 성과</div>
+          <div class="result-list">
+            <div class="result-item">
+              <div class="result-cat">글로벌 배포</div>
+              <div class="result-value">500+ 센터</div>
+              <div class="result-desc">미국·유럽 전 세계 재활 병원·클리닉 도입 기관 수</div>
             </div>
-            <div class="kpi-item">
-              <div class="kpi-value">2억 보</div>
-              <div class="kpi-desc">환자 누적 보행 훈련 걸음 수</div>
+            <div class="result-item">
+              <div class="result-cat">임상 실적</div>
+              <div class="result-value">2억 보</div>
+              <div class="result-desc">환자 누적 보행 훈련 걸음 수 — 임상 효과 대규모 실증</div>
             </div>
-            <div class="kpi-item">
-              <div class="kpi-value">FDA + CE</div>
-              <div class="kpi-desc">미국·유럽 동시 인허가 취득</div>
+            <div class="result-item">
+              <div class="result-cat">규제 인허가</div>
+              <div class="result-value">FDA + CE 동시</div>
+              <div class="result-desc">미국·유럽 인허가 동시 보유 — 글로벌 진출 장벽 해소</div>
             </div>
-            <div class="kpi-item">
-              <div class="kpi-value">Medicare 급여</div>
-              <div class="kpi-desc">2024년 CMS 급여 코드 신설 → 보험 재원 확보</div>
+            <div class="result-item">
+              <div class="result-cat">재원 구조</div>
+              <div class="result-value">Medicare 급여</div>
+              <div class="result-desc">2024년 CMS 급여 코드 신설 → 보험 재원 공식화</div>
             </div>
           </div>
         </div>
@@ -1455,35 +1491,41 @@
       </div>
       <div class="case-body">
         <div>
-          <div class="case-section-label">// 사례 개요</div>
+          <div class="case-section-label">// 배경 & 솔루션</div>
           <p class="case-desc">
-            미국 스타트업 Tombot이 개발한 <strong>Jennie</strong>는 치매 환자의 행동·심리 증상(BPSD)
-            완화를 목적으로 설계된 사실적 외형의 로봇 강아지입니다.
-            진짜 강아지와 유사한 동작·촉감·소리를 구현해 항불안제 복용 필요성을 줄이는 것이 핵심 가치입니다.
+            치매 환자의 행동·심리 증상(BPSD)은 요양시설 직원 소진의 주요 원인이며,
+            기존 대응은 항불안제·항정신병 약물에 의존하는 경우가 많습니다.
+            Tombot의 <strong>Jennie</strong>는 실제 강아지와 유사한 동작·촉감·음성을 구현한 로봇 반려동물로,
+            약물 없이 BPSD를 완화하는 비약물 개입(NPI) 솔루션입니다.
             <br /><br />
-            2025년 6월 시리즈 A로 <strong>$6.1M</strong>을 조달했으며, 700명 이상 시니어 대상
-            3회의 임상 연구를 완료했습니다. 현재 1만 6,000명의 사전예약·대기자 명단을 보유하고 있어
-            시장 수요가 실질적으로 검증된 상태입니다.
+            생산 비용과 진입 장벽이 높은 PARO(물범 로봇)의 대안으로,
+            소비자 친화적 가격대와 친숙한 강아지 형태로 차별화합니다.
+            2025년 6월 <strong>시리즈 A $6.1M</strong>을 조달했으며,
+            700명 이상 시니어를 대상으로 한 3회의 동료 심사(peer-reviewed) 임상 연구를 완료했습니다.
           </p>
         </div>
         <div>
-          <div class="case-section-label">// 핵심 성과 지표 (KPI)</div>
-          <div class="kpi-list">
-            <div class="kpi-item">
-              <div class="kpi-value">$6.1M</div>
-              <div class="kpi-desc">2025년 6월 시리즈 A 투자 유치 (Caduceus Capital Partners 주도)</div>
+          <div class="case-section-label">// 검증된 성과</div>
+          <div class="result-list">
+            <div class="result-item">
+              <div class="result-cat">투자 유치</div>
+              <div class="result-value">$6.1M</div>
+              <div class="result-desc">시리즈 A (Caduceus Capital Partners 주도) — BusinessWire 2025.06</div>
             </div>
-            <div class="kpi-item">
-              <div class="kpi-value">700+</div>
-              <div class="kpi-desc">치매 노인 대상 3회 임상 연구 참가자 수</div>
+            <div class="result-item">
+              <div class="result-cat">임상 근거</div>
+              <div class="result-value">700+ 참가자</div>
+              <div class="result-desc">치매 노인 대상 3회 peer-reviewed 연구 완료 — BPSD 감소 효과 확인</div>
             </div>
-            <div class="kpi-item">
-              <div class="kpi-value">16,000명</div>
-              <div class="kpi-desc">사전예약·대기자 수 (수요 검증)</div>
+            <div class="result-item">
+              <div class="result-cat">시장 수요</div>
+              <div class="result-value">16,000명 대기</div>
+              <div class="result-desc">사전예약·대기자 명단 보유 — 출시 전 수요 실증</div>
             </div>
-            <div class="kpi-item">
-              <div class="kpi-value">BPSD 완화</div>
-              <div class="kpi-desc">동료 심사 연구에서 항정신병 약물 필요성 감소 효과 확인</div>
+            <div class="result-item">
+              <div class="result-cat">임상 효과</div>
+              <div class="result-value">약물 필요성↓</div>
+              <div class="result-desc">항정신병 약물 복용 필요성 감소 — 동료 심사 연구 확인</div>
             </div>
           </div>
         </div>
